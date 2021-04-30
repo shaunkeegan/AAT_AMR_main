@@ -20,4 +20,10 @@ instructions for use and information about the subdirectories of this repository
 <br><br>
 If you have any questions, please feel free to get in touch via email.
 
+## Repository Ettiquete
+<br>
+<b>Please remember to always PULL the repository before you make commits to ensure you're 
+adding to the latest version.</b><br><br>
+If adding new files, please ensure they're added to the correct subdirectory (e.g. model, scenarios, plots etc.).
+
 
