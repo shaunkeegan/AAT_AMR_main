@@ -67,14 +67,15 @@ AAT_AMR_Main <- function(times, init, parms){
     # 
     # CS, CEs, CEr, CIs, CIr, CTs, CTr, CR
     
-    dCS.dt <- birth.c * N - biterate * prob.infection.s * VIs / N - 
-      biterate * prob.infection.r * VIr / N + resusceptible * CR - death * CS
+    dCS.dt <- birth.c * N - biterate * prob.infection.s * VIs / (N + W) - 
+      biterate * prob.infection.r * VIr / (N + W) + resusceptible * CR - 
+      death * CS
     
-    dCEs.dt <- biterate * prob.infection.s * VIs / N - infectiousness * CEs - 
-      death * CEs 
+    dCEs.dt <- biterate * prob.infection.s * VIs / (N + W) - infectiousness * 
+      CEs - death * CEs 
     
-    dCEr.dt <- biterate * prob.infection.r * VIr / N - infectiousness * CEr - 
-      death * CEr 
+    dCEr.dt <- biterate * prob.infection.r * VIr / (N + W) - infectiousness * 
+      CEr - death * CEr 
     
     dCIs.dt <- infectiousness * CEs - treatment * CIs - recovery.s * CIs - 
       death * CIs
@@ -94,14 +95,15 @@ AAT_AMR_Main <- function(times, init, parms){
     # 
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
     
-    dPS.dt <- birth.c * N - biterate * prob.infection.s * VIs / N - 
-      biterate * prob.infection.r * VIr / N + resusceptible * PR - death * PS
+    dPS.dt <- birth.c * N - biterate * prob.infection.s * VIs / (N + W) - 
+      biterate * prob.infection.r * VIr / (N + W) + resusceptible * PR - 
+      death * PS
     
-    dPEs.dt <- biterate * prob.infection.s * VIs / N - infectiousness * PEs - 
-      death * PEs 
+    dPEs.dt <- biterate * prob.infection.s * VIs / (N + W) - infectiousness * 
+      PEs - death * PEs 
     
-    dPEr.dt <- biterate * prob.infection.r * VIr / N - infectiousness * PEr - 
-      death * PEr 
+    dPEr.dt <- biterate * prob.infection.r * VIr / (N + W) - infectiousness * 
+      PEr - death * PEr 
     
     dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery.s * PIs - 
       death * PIs
@@ -120,14 +122,15 @@ AAT_AMR_Main <- function(times, init, parms){
     # 
     # WS, WEs, WEr, WIs, WIr, WTs, WTr, WR
     
-    dWS.dt <- birth.c * N - biterate * prob.infection.s * VIs / N - 
-      biterate * prob.infection.r * VIr / N + resusceptible * WR - death * WS
+    dWS.dt <- birth.c * N - biterate * prob.infection.s * VIs / (N + W) - 
+      biterate * prob.infection.r * VIr / (N + W) + resusceptible * WR - 
+      death * WS
     
-    dWEs.dt <- biterate * prob.infection.s * VIs / N - infectiousness * WEs - 
-      death * WEs 
+    dWEs.dt <- biterate * prob.infection.s * VIs / (N + W) - infectiousness * 
+      WEs - death * WEs 
     
-    dWEr.dt <- biterate * prob.infection.r * VIr / N - infectiousness * WEr - 
-      death * WEr 
+    dWEr.dt <- biterate * prob.infection.r * VIr / (N + W) - infectiousness * 
+      WEr - death * WEr 
     
     dWIs.dt <- infectiousness * WEs - recovery.s * WIs - death * WIs
     
@@ -137,7 +140,18 @@ AAT_AMR_Main <- function(times, init, parms){
       recovery.r * WTr - resusceptible * WR - death * WR
     
     # Tsetse ----
-    dIreb.dt <- beta * Strt * It/N - gamma * Ireb
+    # 
+    # VS, VEs, VEr, VIs, VIr, VTs, VTr
+    
+    dVS.dt <- birth.v * V -
+    
+    dVEs.dt <-  
+    
+    dVEr.dt <-  
+    
+    dVIs.dt <- 
+    
+    dVIr.dt <- 
     
     # Model output ----
     dX <- c(dS.dt, dStrt.dt, dI.dt, dIreb.dt, dR.dt)
