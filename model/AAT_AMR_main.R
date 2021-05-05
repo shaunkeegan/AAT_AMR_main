@@ -143,18 +143,33 @@ AAT_AMR_Main <- function(times, init, parms){
     # 
     # VS, VEs, VEr, VIs, VIr, VTs, VTr
     
-    dVS.dt <- birth.v * V -
+    dVS.dt <- birth.v * V - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (CIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (CIr/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (PIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (PIr/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (WIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (WIr/(N+W)) * VS - death.v * VS
     
-    dVEs.dt <-  
+    dVEs.dt <-  exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
+      (CIs/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (PIs/(N+W)) * VS + exp(- death.v * feeding.rate) * 
+      prob.infection.v * biterate * (WIs/(N+W)) * VS 
     
-    dVEr.dt <-  
+    dVEr.dt <-  exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
+      (CIr/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (PIr/(N+W)) * VS + exp(- death.v * feeding.rate) * 
+      prob.infection.v * biterate * (WIr/(N+W)) * VS
     
-    dVIs.dt <- 
+    dVIs.dt <- infectiousness.v * VEs - death.v * VIs
     
-    dVIr.dt <- 
+    dVIr.dt <- infectiousness.v * VEr - death.v * VIr
     
     # Model output ----
-    dX <- c(dS.dt, dStrt.dt, dI.dt, dIreb.dt, dR.dt)
+    dX <- c(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR, 
+            P, PS, PEs, PEr, PIs, PIr, PTs, PTr, PR, 
+            W, WS, WEs, WEr, WIs, WIr, WR, 
+            V, VS, VEs, VEr, VIs, VIr)
     list(dX)
   })
 }
