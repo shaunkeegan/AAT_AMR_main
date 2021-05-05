@@ -146,20 +146,28 @@ AAT_AMR_Main <- function(times, init, parms){
     dVS.dt <- birth.v * V - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (CIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (CIr/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (CTs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (PIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (PIr/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
+      biterate * (PTr/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (WIs/(N+W)) * VS - exp(- death.v * feeding.rate) * prob.infection.v *
       biterate * (WIr/(N+W)) * VS - death.v * VS
     
     dVEs.dt <-  exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
-      (CIs/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v *
-      biterate * (PIs/(N+W)) * VS + exp(- death.v * feeding.rate) * 
-      prob.infection.v * biterate * (WIs/(N+W)) * VS 
+      (CIs/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v * 
+      biterate * (CTs/(N+W)) * VS + exp(- death.v * feeding.rate) * 
+      prob.infection.v * biterate * (PIs/(N+W)) * VS + 
+      exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
+      (PTs/(N+W)) * VS+ exp(- death.v * feeding.rate) * prob.infection.v * 
+      biterate * (WIs/(N+W)) * VS 
     
     dVEr.dt <-  exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
-      (CIr/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v *
-      biterate * (PIr/(N+W)) * VS + exp(- death.v * feeding.rate) * 
-      prob.infection.v * biterate * (WIr/(N+W)) * VS
+      (CIr/(N+W)) * VS + exp(- death.v * feeding.rate) * prob.infection.v * 
+      biterate * (CTr/(N+W)) * VS + exp(- death.v * feeding.rate) * 
+      prob.infection.v * biterate * (PIr/(N+W)) * VS + 
+      exp(- death.v * feeding.rate) * prob.infection.v * biterate * 
+      (PTr/(N+W)) * VS+ exp(- death.v * feeding.rate) * prob.infection.v * 
+      biterate * (WIr/(N+W)) * VS 
     
     dVIs.dt <- infectiousness.v * VEs - death.v * VIs
     
