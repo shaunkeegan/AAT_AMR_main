@@ -18,7 +18,7 @@
 ##         http://github.com/shaunkeegan/AAT_AMR_main/scenarios
 
 
-AAT_AMR_Main <- function(times, init, parms){
+AAT_AMR_main <- function(times, init, parms){
   
   # C - Cattle
   CS  <- init[1] # Susceptible
@@ -55,21 +55,23 @@ AAT_AMR_Main <- function(times, init, parms){
   VIs <- init[26] # Infected (drug sensitive strain)
   VIr <- init[27] # Infected (drug resistant strain) 
   
+  # Population total ----
+  N <- CS + CEs + CEr + CIs + CIr + CTs + CTr + CR +
+    PS + PEs + PEr + PIs + PIr + PTs + PTr + PR
+  C <- CS + CEs + CEr + CIs + CIr + CTs + CTr + CR
+  P <- PS + PEs + PEr + PIs + PIr + PTs + PTr + PR
+  W <- WS + WEs + WEr + WIs + WIr + WR
+  V <- VS + VEs + VEr + VIs + VIr
+  
+  
   with(as.list(parms),{
     
-    # Population total ----
-    N <- CS + CEs + CEr + CIs + CIr + CTs + CTr + CR +
-      PS + PEs + PEr + PIs + PIr + PTs + PTr + PR
-    C <- CS + CEs + CEr + CIs + CIr + CTs + CTr + CR
-    P <- PS + PEs + PEr + PIs + PIr + PTs + PTr + PR
-    W <- WS + WEs + WEr + WIs + WIr + WR
-    V <- VS + VEs + VEr + VIs + VIr
     
     # Cattle ----
     # 
     # CS, CEs, CEr, CIs, CIr, CTs, CTr, CR
     
-    dCS.dt <- birth.c * N - biterate * prob.infection.s * VIs / C - 
+    dCS.dt <- birth.c * N - biterate * prob.infection.s * VIs / C -  
       biterate * prob.infection.r * VIr / C + resusceptible * CR - 
       death * CS
     
@@ -138,8 +140,8 @@ AAT_AMR_Main <- function(times, init, parms){
     
     dWIr.dt <- infectiousness * WEr - recovery.r * WIr - death * WIr
     
-    dWR.dt <- recovery.s * WIs + recovery.r * WIr + recovery.s * WTs + 
-      recovery.r * WTr - resusceptible * WR - death * WR
+    dWR.dt <- recovery.s * WIs + recovery.r * WIr - resusceptible * WR - 
+      death * WR
     
     # Tsetse ----
     # 
@@ -179,9 +181,9 @@ AAT_AMR_Main <- function(times, init, parms){
     
     # Model output ----
     dX <- c(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR, 
-            P, PS, PEs, PEr, PIs, PIr, PTs, PTr, PR, 
-            W, WS, WEs, WEr, WIs, WIr, WR, 
-            V, VS, VEs, VEr, VIs, VIr)
+            PS, PEs, PEr, PIs, PIr, PTs, PTr, PR, 
+            WS, WEs, WEr, WIs, WIr, WR, 
+            VS, VEs, VEr, VIs, VIr)
     list(dX)
   })
 }
