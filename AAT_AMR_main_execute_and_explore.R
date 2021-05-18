@@ -24,23 +24,23 @@ source("model/AAT_AMR_main.R")
 prop.prophylaxis <- 0
 
 # Cattle 
-birth.c          <- 0 #0
-biterate         <- 0 #0.3/4
-prob.infection.s <- 0 #0.46
-prob.infection.r <- 0 #0.46
-infectiousness   <- 0 #0.05
-resusceptible    <- 0 #0.01
-death            <- 0 #0
-treatment        <- 0 #0
-recovery.s       <- 0 #0.01      
-recovery.r       <- 0 #0.01      
+birth.c          <- 0.1
+biterate         <- 0.3/4
+prob.infection.s <- 0.46
+prob.infection.r <- 0.46
+infectiousness   <- 0.05
+resusceptible    <- 0.01
+death            <- 0.1
+treatment        <- 0
+recovery.s       <- 0.01      
+recovery.r       <- 0.01      
 
 # Vectors
-birth.v          <-  0 #0
-death.v          <-  0 #0      
-feeding.rate     <-  0 #3   
-prob.infection.v <-  0 #0.025
-infectiousness.v <-  0 #0.05
+birth.v          <-  0
+death.v          <-  0      
+feeding.rate     <-  3   
+prob.infection.v <-  0.025
+infectiousness.v <-  0.05
 
 params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r, 
                infectiousness, resusceptible, death, treatment, recovery.s, 
@@ -50,7 +50,7 @@ params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r,
 
 ## Initial Conditions ----
 
-cattle <- 1 # Total number of cattle
+cattle <- 10 # Total number of cattle
 
 # C - Cattle
 CS  <- cattle * (1 - prop.prophylaxis)   # Susceptible
@@ -63,7 +63,7 @@ CTr <- 0    # Treated (drug resistant strain)
 CR  <- 0    # Recovered
 
 # P - Prophylactically treated cattle
-PS  <- CS * prop.prophylaxis    # Susceptible
+PS  <- cattle * prop.prophylaxis    # Susceptible
 PEs <- 0    # Exposed (drug sensitive strain)
 PEr <- 0    # Exposed (drug resistant strain)
 PIs <- 0    # Infected (drug sensitive strain)
