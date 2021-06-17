@@ -73,7 +73,7 @@ AAT_AMR_main <- function(times, init, parms){
     # 
     # CS, CEs, CEr, CIs, CIr, CTs, CTr, CR
     
-    dCS.dt <- birth.c * N - biterate * prob.infection.s * VIs / N -  
+    dCS.dt <- birth.c * C - biterate * prob.infection.s * VIs / N -  
       biterate * prob.infection.r * VIr / N + resusceptible * CR - 
       death * CS
     
@@ -101,7 +101,7 @@ AAT_AMR_main <- function(times, init, parms){
     # 
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
     
-    dPS.dt <- birth.c * N - biterate * prob.infection.s * VIs / N - 
+    dPS.dt <- birth.c * P - biterate * prob.infection.s * VIs / N - 
       biterate * prob.infection.r * VIr / N + resusceptible * PR - 
       death * PS
     
