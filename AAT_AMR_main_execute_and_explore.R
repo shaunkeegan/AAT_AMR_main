@@ -119,8 +119,14 @@ times <- seq(0,1000,1)
 ## RUN MODEL ----
 
 out <- ode(y = inits, parms = params, func = AAT_AMR_main, times = times)
-out
 
+names <- c("times", "CS", "CEs", "CEr", "CIs", "CIr", "CTs", "CTr", "CR", 
+           "PS", "PEs", "PEr", "PIs", "PIr", "PTs", "PTr", "PR", 
+           "WS", "WEs", "WEr", "WIs", "WIr", "WR", 
+           "VS", "VEs", "VEr", "VIs", "VIr")
+colnames(out) <- names
+colnames(out)
+out
 
 par(mfrow=c(2,2))
 plot(out[,2] ~ out[,1], type = 'l', ylim = c(0, max(out[,2])), lwd = 3, 
