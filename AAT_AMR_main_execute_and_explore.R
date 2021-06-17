@@ -127,42 +127,44 @@ names <- c("times", "CS", "CEs", "CEr", "CIs", "CIr", "CTs", "CTr", "CR",
 colnames(out) <- names
 colnames(out)
 out
+out <- as.data.frame(out)
+
 
 par(mfrow=c(2,2))
-plot(out[,2] ~ out[,1], type = 'l', ylim = c(0, max(out[,2])), lwd = 3, 
+plot(out$CS ~ out[,1], type = 'l', ylim = c(0, max(out[,2])), lwd = 3, 
      col = 'blue', main = "Cattle (No Prophylaxis)")
-lines(out[,3] ~ out[,1],lwd =3, col = 'orange') # Exposed
-lines(out[,4] ~ out[,1],lwd =3, col = 'darkorange') # Exposed
-lines(out[,5] ~ out[,1],lwd =3, col = 'red') # Infected
-lines(out[,6] ~ out[,1],lwd =3, col = 'darkred') # Infected
-lines(out[,7] ~ out[,1],lwd =3, col = 'green') # Treated
-lines(out[,8] ~ out[,1],lwd =3, col = 'darkgreen') # Treated
-lines(out[,9] ~ out[,1],lwd =3, col = 'grey') # Recovered
+lines(out$CEs ~ out[,1],lwd =3, col = 'orange') # Exposed
+lines(out$CEr ~ out[,1],lwd =3, col = 'darkorange') # Exposed
+lines(out$CIs ~ out[,1],lwd =3, col = 'red') # Infected
+lines(out$CIr ~ out[,1],lwd =3, col = 'darkred') # Infected
+lines(out$CTs ~ out[,1],lwd =3, col = 'green') # Treated
+lines(out$CTr ~ out[,1],lwd =3, col = 'darkgreen') # Treated
+lines(out$CR ~ out[,1],lwd =3, col = 'grey') # Recovered
 
-plot(out[,10] ~ out[,1], type = 'l', ylim = c(0, max(out[,10])), col = 'blue',
+plot(out$PS ~ out[,1], type = 'l', ylim = c(0, max(out[,10])), col = 'blue',
      lwd = 3, main = "Cattle (with Prophylaxis)")
-lines(out[,11] ~ out[,1], lwd =3, col = 'orange') # Exposed
-lines(out[,12] ~ out[,1], lwd =3, col = 'darkorange') # Exposed
-lines(out[,13] ~ out[,1], lwd =3, col = 'red') # Infected
-lines(out[,14] ~ out[,1], lwd =3, col = 'darkred') # Infected
-lines(out[,15] ~ out[,1], lwd =3, col = 'green') # Treated
-lines(out[,16] ~ out[,1], lwd =3, col = 'darkgreen') # Treated
-lines(out[,17] ~ out[,1], lwd =3, col = 'grey') # Recovered
+lines(out$PEs ~ out[,1], lwd =3, col = 'orange') # Exposed
+lines(out$PEr ~ out[,1], lwd =3, col = 'darkorange') # Exposed
+lines(out$PIs ~ out[,1], lwd =3, col = 'red') # Infected
+lines(out$PIr ~ out[,1], lwd =3, col = 'darkred') # Infected
+lines(out$PTs ~ out[,1], lwd =3, col = 'green') # Treated
+lines(out$PTr ~ out[,1], lwd =3, col = 'darkgreen') # Treated
+lines(out$PR  ~ out[,1], lwd =3, col = 'grey') # Recovered
 
 
-plot(out[,18] ~ out[,1], type = 'l', ylim = c(0, max(out[,18])), col = 'blue',
+plot(out$WS ~ out[,1], type = 'l', ylim = c(0, max(out[,18])), col = 'blue',
      lwd = 3, main = "Wildlife")
-lines(out[,19] ~ out[,1],lwd = 3, col = 'orange') # Exposed
-lines(out[,20] ~ out[,1],lwd = 3, col = 'darkorange') # Exposed
-lines(out[,21] ~ out[,1],lwd = 3, col = 'red') # Infected
-lines(out[,22] ~ out[,1],lwd = 3, col = 'darkred') # Infected
-lines(out[,23] ~ out[,1],lwd = 3, col = 'grey') # Recovered
+lines(out$WEs ~ out[,1],lwd = 3, col = 'orange') # Exposed
+lines(out$WEr ~ out[,1],lwd = 3, col = 'darkorange') # Exposed
+lines(out$WIs ~ out[,1],lwd = 3, col = 'red') # Infected
+lines(out$WIr ~ out[,1],lwd = 3, col = 'darkred') # Infected
+lines(out$WR ~ out[,1],lwd = 3, col = 'grey') # Recovered
 
 
-plot(out[,24] ~ out[,1], type = 'l', ylim = c(0, max(out[,24])), col = 'blue',
+plot(out$VS ~ out[,1], type = 'l', ylim = c(0, max(out[,24])), col = 'blue',
      lwd = 3, main = "Vector")
-lines(out[,25] ~ out[,1], lwd = 3, col = 'orange') # Exposed
-lines(out[,26] ~ out[,1], lwd = 3, col = 'darkorange') # Exposed
-lines(out[,27] ~ out[,1], lwd = 3, col = 'red') # Infected
-lines(out[,28] ~ out[,1], lwd = 3, col = 'darkred') # Infected
+lines(out$VEs ~ out[,1], lwd = 3, col = 'orange') # Exposed
+lines(out$VEr ~ out[,1], lwd = 3, col = 'darkorange') # Exposed
+lines(out$VIs ~ out[,1], lwd = 3, col = 'red') # Infected
+lines(out$VIr ~ out[,1], lwd = 3, col = 'darkred') # Infected
 
