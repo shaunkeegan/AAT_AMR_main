@@ -21,50 +21,52 @@ source("model/AAT_AMR_main.R")
 
 # System
 
-prop.prophylaxis <- 0
+prop.prophylaxis <- 0.5
 
 # Cattle 
-birth.c          <- 0.1
-biterate         <- 0.3
+birth.c          <- 1/365
+biterate         <- 0.3/4
 prob.infection.s <- 0.46
 prob.infection.r <- 0.46
-infectiousness   <- 0.5
-resusceptible    <- 0.01
+infectiousness   <- 1/9
+resusceptible    <- 1/100
 death            <- birth.c
 treatment        <- 0
 recovery.s       <- 0.01      
-recovery.r       <- 0.01      
+recovery.r       <- 0.01  
+emergence       <- 1/1000
 
 # Wildlife 
-birth.w          <- 0.1
+birth.w          <- 1/365
 biterate.w         <- 0.3/4
 prob.infection.s.w <- 0.46
 prob.infection.r.w <- 0.46
-infectiousness.w   <- 0.05
-resusceptible.w    <- 0.01
+infectiousness.w   <- 1/9
+resusceptible.w    <- 1/100
 death.w            <- birth.w
 recovery.s.w       <- 0.01      
-recovery.r.w       <- 0.01     
+recovery.r.w       <- 0.01  
+emergence.w        <- 0
 
 # Vectors
-birth.v          <-  0.3
-death.v          <-  0.3    
+birth.v          <-  1/30
+death.v          <-  1/30 
 feeding.rate     <-  3   
 prob.infection.v <-  0.025
-infectiousness.v <-  0.05
+infectiousness.v <-  1/3
 
 params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r, 
                infectiousness, resusceptible, death, treatment, recovery.s, 
                recovery.r, birth.v, death.v, feeding.rate, prob.infection.v, 
-               infectiousness.v)
+               infectiousness.v, emergence, emergence.w)
 
 
 ## Initial Conditions ----
 
-cattle <- 100 # Total number of cattle
+cattle <- 50 # Total number of cattle
 
 # C - Cattle
-CS  <- cattle * (1 - prop.prophylaxis)   # Susceptible
+CS  <- cattle * (1 - prop.prophylaxis) - 1   # Susceptible
 CEs <- 0    # Exposed (drug sensitive strain)
 CEr <- 0    # Exposed (drug resistant strain)
 CIs <- 1    # Infected (drug sensitive strain)
@@ -84,7 +86,7 @@ PTr <- 0    # Treated (drug resistant strain)
 PR  <- 0    # Recovered
 
 # W - Wildlife
-WS  <- 100    # Susceptible
+WS  <- 0   # Susceptible
 WEs <- 0    # Exposed (drug sensitive strain)
 WEr <- 0    # Exposed (drug resistant strain)
 WIs <- 0    # Infected (drug sensitive strain)
@@ -92,10 +94,10 @@ WIr <- 0    # Infected (drug resistant strain)
 WR  <- 0    # Recovered
 
 # V - Vectors
-VS  <- 2999 # Susceptible
+VS  <- 3000 # Susceptible
 VEs <- 0    # Exposed (drug sensitive strain) 
 VEr <- 0    # Exposed (drug resistant strain)
-VIs <- 1    # Infected (drug sensitive strain)
+VIs <- 0    # Infected (drug sensitive strain)
 VIr <- 0    # Infected (drug resistant strain) 
 
 inits <- cbind(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR, 
@@ -113,7 +115,7 @@ inits <- cbind(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR,
 
 ## Times ----
 
-times <- seq(0,1000,1)
+times <- seq(0,2000,1)
 
 
 ## RUN MODEL ----
@@ -131,40 +133,45 @@ out <- as.data.frame(out)
 
 
 par(mfrow=c(2,2))
-plot(out$CS ~ out[,1], type = 'l', ylim = c(0, max(out[,2])), lwd = 3, 
-     col = 'blue', main = "Cattle (No Prophylaxis)")
-lines(out$CEs ~ out[,1],lwd =3, col = 'orange') # Exposed
-lines(out$CEr ~ out[,1],lwd =3, col = 'darkorange') # Exposed
-lines(out$CIs ~ out[,1],lwd =3, col = 'red') # Infected
-lines(out$CIr ~ out[,1],lwd =3, col = 'darkred') # Infected
-lines(out$CTs ~ out[,1],lwd =3, col = 'green') # Treated
-lines(out$CTr ~ out[,1],lwd =3, col = 'darkgreen') # Treated
-lines(out$CR ~ out[,1],lwd =3, col = 'grey') # Recovered
+plot(out$CS ~ out$times, type = 'l', ylim = c(0, max(out[,2])+5), lwd = 3, 
+     col = 'blue', main = "Cattle (No Prophylaxis)", xlab = "Time", ylab = "Number")
+lines(out$CEs ~ out$times,lwd =3, col = 'orange') # Exposed
+lines(out$CEr ~ out$times,lwd =3, col = 'darkorange') # Exposed
+lines(out$CIs ~ out$times,lwd =3, col = 'red') # Infected
+lines(out$CIr ~ out$times,lwd =3, col = 'darkred') # Infected
+lines(out$CTs ~ out$times,lwd =3, col = 'green') # Treated
+lines(out$CTr ~ out$times,lwd =3, col = 'darkgreen') # Treated
+lines(out$CR ~ out$times,lwd =3, col = 'grey') # Recovered
+lines((out$CEs + out$CEr + out$CIs + out$CIr + out$CTs + out$CTr + out$CR + out$CS) ~
+        out$times, lty = 2)
 
-plot(out$PS ~ out[,1], type = 'l', ylim = c(0, max(out[,10])), col = 'blue',
-     lwd = 3, main = "Cattle (with Prophylaxis)")
-lines(out$PEs ~ out[,1], lwd =3, col = 'orange') # Exposed
-lines(out$PEr ~ out[,1], lwd =3, col = 'darkorange') # Exposed
-lines(out$PIs ~ out[,1], lwd =3, col = 'red') # Infected
-lines(out$PIr ~ out[,1], lwd =3, col = 'darkred') # Infected
-lines(out$PTs ~ out[,1], lwd =3, col = 'green') # Treated
-lines(out$PTr ~ out[,1], lwd =3, col = 'darkgreen') # Treated
-lines(out$PR  ~ out[,1], lwd =3, col = 'grey') # Recovered
+plot(out$PS ~ out$times, type = 'l', ylim = c(0, max(out[,10])+5), col = 'blue',
+     lwd = 3, main = "Cattle (with Prophylaxis)", xlab = "Time", ylab = "Number")
+lines(out$PEs ~ out$times, lwd =3, col = 'orange') # Exposed
+lines(out$PEr ~ out$times, lwd =3, col = 'darkorange') # Exposed
+lines(out$PIs ~ out$times, lwd =3, col = 'red') # Infected
+lines(out$PIr ~ out$times, lwd =3, col = 'darkred') # Infected
+lines(out$PTs ~ out$times, lwd =3, col = 'green') # Treated
+lines(out$PTr ~ out$times, lwd =3, col = 'darkgreen') # Treated
+lines(out$PR  ~ out$times, lwd =3, col = 'grey') # Recovered
+lines((out$PEs + out$PEr + out$PIs + out$PIr + out$PTs + out$PTr + out$PR + out$PS) ~
+        out$times, lty = 2)
 
+plot(out$WS ~ out$times, type = 'l', ylim = c(0, max(out[,18])+ 5), col = 'blue',
+     lwd = 3, main = "Wildlife", xlab = "Time", ylab = "Number")
+lines(out$WEs ~ out$times,lwd = 3, col = 'orange') # Exposed
+lines(out$WEr ~ out$times,lwd = 3, col = 'darkorange') # Exposed
+lines(out$WIs ~ out$times,lwd = 3, col = 'red') # Infected
+lines(out$WIr ~ out$times,lwd = 3, col = 'darkred') # Infected
+lines(out$WR ~ out$times,lwd = 3, col = 'grey') # Recovered
+lines((out$WEs + out$WEr + out$WIs + out$WIr + out$WR + out$WS) ~
+        out$times, lty = 2)
 
-plot(out$WS ~ out[,1], type = 'l', ylim = c(0, max(out[,18])), col = 'blue',
-     lwd = 3, main = "Wildlife")
-lines(out$WEs ~ out[,1],lwd = 3, col = 'orange') # Exposed
-lines(out$WEr ~ out[,1],lwd = 3, col = 'darkorange') # Exposed
-lines(out$WIs ~ out[,1],lwd = 3, col = 'red') # Infected
-lines(out$WIr ~ out[,1],lwd = 3, col = 'darkred') # Infected
-lines(out$WR ~ out[,1],lwd = 3, col = 'grey') # Recovered
-
-
-plot(out$VS ~ out[,1], type = 'l', ylim = c(0, max(out[,24])), col = 'blue',
-     lwd = 3, main = "Vector")
-lines(out$VEs ~ out[,1], lwd = 3, col = 'orange') # Exposed
-lines(out$VEr ~ out[,1], lwd = 3, col = 'darkorange') # Exposed
-lines(out$VIs ~ out[,1], lwd = 3, col = 'red') # Infected
-lines(out$VIr ~ out[,1], lwd = 3, col = 'darkred') # Infected
-
+plot(out$VS ~ out$times, type = 'l', ylim = c(0, max(out[,24])+100), col = 'blue',
+     lwd = 3, main = "Vector", xlab = "Time", ylab = "Number")
+lines(out$VEs ~ out$times, lwd = 3, col = 'orange') # Exposed
+lines(out$VEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
+lines(out$VIs ~ out$times, lwd = 3, col = 'red') # Infected
+lines(out$VIr ~ out$times, lwd = 3, col = 'darkred') # Infected
+lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
+        out$times, lty = 2)
