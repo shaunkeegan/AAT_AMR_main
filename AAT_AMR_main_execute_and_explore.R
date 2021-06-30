@@ -21,7 +21,7 @@ source("model/AAT_AMR_main.R")
 
 # System
 
-prop.prophylaxis <- 0.5
+prop.prophylaxis <- 0.1
 
 # Cattle 
 birth.c          <- 1/365
@@ -34,7 +34,7 @@ death            <- birth.c
 treatment        <- 0
 recovery.s       <- 0.01      
 recovery.r       <- 0.01  
-emergence       <- 1/1000
+emergence       <- 1/100
 
 # Wildlife 
 birth.w          <- 1/365
@@ -86,7 +86,7 @@ PTr <- 0    # Treated (drug resistant strain)
 PR  <- 0    # Recovered
 
 # W - Wildlife
-WS  <- 0   # Susceptible
+WS  <- 50   # Susceptible
 WEs <- 0    # Exposed (drug sensitive strain)
 WEr <- 0    # Exposed (drug resistant strain)
 WIs <- 0    # Infected (drug sensitive strain)
