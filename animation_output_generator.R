@@ -31,9 +31,9 @@ setwd("/Users/shaunkeegan/Documents/OneDrive - University of Glasgow/research/AA
 
 trt <- as.numeric(seq(0,100, by = 5))
 saveGIF({
-  for (i in 1:100) {
+  for (i in 1:101) {
 
-    p <- i/100
+    p <- (i-1)/100
     
     
     ## Parameters ----
@@ -85,10 +85,10 @@ saveGIF({
     cattle <- 100 # Total number of cattle
     
     # C - Cattle
-    CS  <- cattle * (1 - prop.prophylaxis) - 1   # Susceptible
+    CS  <- cattle * (1 - prop.prophylaxis)    # Susceptible
     CEs <- 0    # Exposed (drug sensitive strain)
     CEr <- 0    # Exposed (drug resistant strain)
-    CIs <- 0    # Infected (drug sensitive strain)
+    CIs <- 1    # Infected (drug sensitive strain)
     CIr <- 0    # Infected (drug resistant strain)
     CTs <- 0    # Treated (drug sensitive strain)
     CTr <- 0    # Treated (drug resistant strain)
@@ -98,7 +98,7 @@ saveGIF({
     PS  <- cattle * prop.prophylaxis    # Susceptible
     PEs <- 0    # Exposed (drug sensitive strain)
     PEr <- 0    # Exposed (drug resistant strain)
-    PIs <- 1    # Infected (drug sensitive strain)
+    PIs <- 0    # Infected (drug sensitive strain)
     PIr <- 0    # Infected (drug resistant strain)
     PTs <- 0    # Treated (drug sensitive strain)
     PTr <- 0    # Treated (drug resistant strain)
@@ -124,17 +124,12 @@ saveGIF({
                    WS, WEs, WEr, WIs, WIr, WR, 
                    VS, VEs, VEr, VIs, VIr)
     
-    
-    
-    
-    
-    
-    
+
     
     
     ## Times ----
     
-    times <- seq(0,2200,1)
+    times <- seq(0,10000,1)
     
     
     ## RUN MODEL ----
@@ -151,52 +146,22 @@ saveGIF({
     out <- as.data.frame(out)
     
     
-    par(mfrow=c(2,2))
-    plot(out$CS ~ out$times, type = 'l', ylim = c(0, max(out[,2])+5), lwd = 3, 
-         col = 'blue', main = paste('Cattle (with Prophylaxis) - Proportion ', 100 - i, '%'), xlab = "Time", ylab = "Number")
-    lines(out$CEs ~ out$times,lwd =3, col = 'orange') # Exposed
-    lines(out$CEr ~ out$times,lwd =3, col = 'darkorange') # Exposed
-    lines(out$CIs ~ out$times,lwd =3, col = 'red') # Infected
-    lines(out$CIr ~ out$times,lwd =3, col = 'darkred') # Infected
-    lines(out$CTs ~ out$times,lwd =3, col = 'green') # Treated
-    lines(out$CTr ~ out$times,lwd =3, col = 'darkgreen') # Treated
-    lines(out$CR ~ out$times,lwd =3, col = 'grey') # Recovered
-    lines((out$CEs + out$CEr + out$CIs + out$CIr + out$CTs + out$CTr + out$CR + out$CS) ~
-            out$times, lty = 2)
+    par(mfrow=c(1,3))
+    plot((out$CEs + out$CIs + out$CTs + out$CEr + out$CIr + out$CTr +
+            out$PEs + out$PIs + out$PTs + out$PEr + out$PIr + out$PTr)  ~ out$times, type = 'l', ylim = c(0, 100), lwd = 3, 
+         col = 'blue', main = paste('Prophylaxis Proportion ', 100 - (i-1), '%'), xlab = "Time", ylab = "Number")
+
+    plot((out$CEr + out$CIr + out$CTr +
+           out$PEr + out$PIr + out$PTr)  ~ out$times, type = 'l', ylim = c(0, 100), lwd = 3, 
+         col = 'red', main = paste('Prophylaxis Proportion ', 100 - (i-1), '%'), xlab = "Time", ylab = "Number")
     
-    plot(out$PS ~ out$times, type = 'l', ylim = c(0, max(out[,10])+5), col = 'blue',
-         lwd = 3, main = paste('Cattle (with Prophylaxis) - Proportion ', i, '%'), xlab = "Time", ylab = "Number")
-    lines(out$PEs ~ out$times, lwd =3, col = 'orange') # Exposed
-    lines(out$PEr ~ out$times, lwd =3, col = 'darkorange') # Exposed
-    lines(out$PIs ~ out$times, lwd =3, col = 'red') # Infected
-    lines(out$PIr ~ out$times, lwd =3, col = 'darkred') # Infected
-    lines(out$PTs ~ out$times, lwd =3, col = 'green') # Treated
-    lines(out$PTr ~ out$times, lwd =3, col = 'darkgreen') # Treated
-    lines(out$PR  ~ out$times, lwd =3, col = 'grey') # Recovered
-    lines((out$PEs + out$PEr + out$PIs + out$PIr + out$PTs + out$PTr + out$PR + out$PS) ~
-            out$times, lty = 2)
-    
-    plot(out$WS ~ out$times, type = 'l', ylim = c(0, max(out[,18])+ 5), col = 'blue',
-         lwd = 3, main = "Wildlife", xlab = "Time", ylab = "Number")
-    lines(out$WEs ~ out$times,lwd = 3, col = 'orange') # Exposed
-    lines(out$WEr ~ out$times,lwd = 3, col = 'darkorange') # Exposed
-    lines(out$WIs ~ out$times,lwd = 3, col = 'red') # Infected
-    lines(out$WIr ~ out$times,lwd = 3, col = 'darkred') # Infected
-    lines(out$WR ~ out$times,lwd = 3, col = 'grey') # Recovered
-    lines((out$WEs + out$WEr + out$WIs + out$WIr + out$WR + out$WS) ~
-            out$times, lty = 2)
-    
-    plot(out$VS ~ out$times, type = 'l', ylim = c(0, max(out[,24])+100), col = 'blue',
-         lwd = 3, main = "Vector", xlab = "Time", ylab = "Number")
-    lines(out$VEs ~ out$times, lwd = 3, col = 'orange') # Exposed
-    lines(out$VEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
-    lines(out$VIs ~ out$times, lwd = 3, col = 'red') # Infected
-    lines(out$VIr ~ out$times, lwd = 3, col = 'darkred') # Infected
-    lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
-            out$times, lty = 2)
+    plot((out$CEs + out$CIs + out$CTs + 
+            out$PEs + out$PIs + out$PTs )  ~ out$times, type = 'l', ylim = c(0, 100), lwd = 3, 
+         col = 'green', main = paste('Prophylaxis Proportion ', 100 - (i-1), '%'), xlab = "Time", ylab = "Number")
     
     
+
     
     
   }
-}, fps = 0.25 , ani.width = 900, ani.height = 900)
+}, fps = 2  , ani.width = 900, ani.height = 900)
