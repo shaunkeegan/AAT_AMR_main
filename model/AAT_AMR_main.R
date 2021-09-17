@@ -90,13 +90,20 @@ AAT_AMR_main <- function(times, init, parms){
       death * CIr
     
     dCTs.dt <- treatment * CIs - recovery.s * CTs - death * CTs - emergence * CTs
-      
+    
     dCTr.dt <- treatment * CIr - recovery.r * CTr - death * CTr + emergence * CTs
-      
-    dCR.dt <- recovery.s * CIs + recovery.r * CIr + recovery.s * CTs + 
+    
+    dCR.dt <- recovery.s * CIs + recovery.r * CIr + recovery.s * CTs +
       recovery.r * CTr - resusceptible * CR - death * CR
-      
-      
+    
+    # dCTs.dt <- 0
+    # 
+    # dCTr.dt <- 0
+    # 
+    # dCR.dt <- treatment * CIs + treatment * CIr + recovery.s * CIs + recovery.r * CIr + recovery.s * CTs + 
+    #   recovery.r * CTr - resusceptible * CR - death * CR
+    
+    
     # Cattle with prophylaxis ----
     # 
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
@@ -126,24 +133,24 @@ AAT_AMR_main <- function(times, init, parms){
     
     # Wildlife ----
     # 
-    # WS, WEs, WEr, WIs, WIr, WTs, WTr, WR
+    # WS, WEs, WEr, WIs, WIr, WTs, WTr, WR #I CHANGED  death to death.w here
     
     dWS.dt <- birth.w * W - biterate * prob.infection.s * WS * VIs / N - 
       biterate * prob.infection.r * WS * VIr / N + resusceptible * WR - 
-      death * WS
+      death.w * WS
     
-    dWEs.dt <- biterate * prob.infection.s * WS * VIs / N - infectiousness * 
-      WEs - death * WEs 
+    dWEs.dt <- biterate * prob.infection.s * WS * VIs / N - infectiousness.w * 
+      WEs - death.w * WEs 
     
-    dWEr.dt <- biterate * prob.infection.r * WS * VIr / N - infectiousness * 
-      WEr - death * WEr 
+    dWEr.dt <- biterate * prob.infection.r * WS * VIr / N - infectiousness.w * 
+      WEr - death.w * WEr 
     
-    dWIs.dt <- infectiousness * WEs - recovery.s * WIs - death * WIs + reversion * WIr
+    dWIs.dt <- infectiousness.w * WEs - recovery.s.w * WIs - death.w * WIs + reversion * WIr
     
-    dWIr.dt <- infectiousness * WEr - recovery.r * WIr - death * WIr - reversion * WIr
+    dWIr.dt <- infectiousness.w * WEr - recovery.r.w * WIr - death.w * WIr - reversion * WIr
     
-    dWR.dt <- recovery.s * WIs + recovery.r * WIr - resusceptible * WR - 
-      death * WR
+    dWR.dt <- recovery.s.w * WIs + recovery.r.w * WIr - resusceptible * WR - 
+      death.w * WR
     
     # Tsetse ----
     # 
