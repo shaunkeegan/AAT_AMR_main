@@ -26,7 +26,7 @@ prop.prophylaxis <- 0
 # Cattle 
 birth.c          <- 1/365
 biterate         <- (0.3/4)/10
-prob.infection <- 0.46
+prob.infection <- 0.46         # IF THIS IS HALFED, END UP WITH NANs IN THE TAIL OUTPUT
 infectiousness   <- 1/20
 resusceptible    <- 0.01
 death            <- birth.c
@@ -61,7 +61,7 @@ params <- cbind(birth.c, biterate, prob.infection,
 
 ## Initial Conditions ----
 
-cattle <- 25 # Total number of cattle
+cattle <- 50 # Total number of cattle
 
 # C - Cattle
 NC <- cattle
@@ -85,8 +85,8 @@ PTr <- 0    # Treated (drug resistant strain)
 PR  <- 0    # Recovered
 
 # W - Wildlife
-NW <- 25
-WIs <- 1    # Infected (drug sensitive strain)
+NW <- 0
+WIs <- 0    # Infected (drug sensitive strain)
 WS  <- NW-WIs  # Susceptible
 WEs <- 0    # Exposed (drug sensitive strain)
 WEr <- 0    # Exposed (drug resistant strain)
@@ -108,12 +108,12 @@ inits <- cbind(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR,
 
 N <- NC + NW
 
-RH1V <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
+RH1Vs <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
 
-RWV <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
+RWVs <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
 
 
-RVH1 <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) +
+RVH1s <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) +
   
   prob.infection.v * biterate * (NV/N) * (1/(recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) * 
   
@@ -121,13 +121,32 @@ RVH1 <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery + death)
 
 
 
-RVW  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
+RVWs  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
 
-R0 <- sqrt(RH1V * RVH1 + RWV * RVW)
+R0s <- sqrt(RH1Vs * RVH1s + RWVs * RVWs)
 
 
 
-R0
+RH1Vr <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
+
+RWVr <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
+
+
+RVH1r <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) +
+  
+  prob.infection.v * biterate * (NV/N) * (1/(recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) * 
+  
+  (treatment/((treatment + recovery + death)))
+
+
+
+RVWr  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
+
+R0r <- sqrt(RH1Vr * RVH1r + RWVr * RVWr)
+
+
+
+
 
 
 
@@ -152,7 +171,7 @@ out <- as.data.frame(out)
 
 par(mfrow=c(2,2))
 plot(out$CS ~ out$times, type = 'l', ylim = c(0, NC), lwd = 3, 
-     col = 'blue', main = paste(round(R0, 4)), xlab = "Time", ylab = "Number")
+     col = 'blue', main = paste(round(R0s, 4)), xlab = "Time", ylab = "Number")
 lines(out$CEs ~ out$times,lwd =3, col = 'orange') # Exposed
 #lines(out$CEr ~ out$times,lwd =3, col = 'darkorange') # Exposed
 lines(out$CIs ~ out$times,lwd =3, col = 'red') # Infected
@@ -164,7 +183,7 @@ lines((out$CEs + out$CEr + out$CIs + out$CIr + out$CTs + out$CTr + out$CR + out$
         out$times, lty = 2)
 
 plot(out$CS ~ out$times, type = 'l', ylim = c(0, 0.1), lwd = 3, 
-     col = 'blue', main = paste(round(R0, 4)), xlab = "Time", ylab = "Number")
+     col = 'blue', main = paste(round(R0s, 4)), xlab = "Time", ylab = "Number")
 lines(out$CEs ~ out$times,lwd =3, col = 'orange') # Exposed
 #lines(out$CEr ~ out$times,lwd =3, col = 'darkorange') # Exposed
 lines(out$CIs ~ out$times,lwd =3, col = 'red') # Infected
