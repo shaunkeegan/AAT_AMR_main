@@ -73,83 +73,83 @@ AAT_AMR_main <- function(times, init, parms){
     # 
     # CS, CEs, CEr, CIs, CIr, CTs, CTr, CR
     
-    dCS.dt <- birth.c * C - biterate * prob.infection.s * CS * VIs / N -  
-      biterate * prob.infection.r * CS * VIr / N + resusceptible * CR - 
+    dCS.dt <- birth.c * C - biterate * prob.infection * CS * VIs / N -  
+      biterate * prob.infection * CS * VIr / N + resusceptible * CR - 
       death * CS
     
-    dCEs.dt <- biterate * prob.infection.s * CS * VIs / N - infectiousness * 
+    dCEs.dt <- biterate * prob.infection * CS * VIs / N - infectiousness * 
       CEs - death * CEs 
     
-    dCEr.dt <- biterate * prob.infection.r * CS * VIr / N - infectiousness * 
+    dCEr.dt <- biterate * prob.infection * CS * VIr / N - infectiousness * 
       CEr - death * CEr 
     
-    dCIs.dt <- infectiousness * CEs - treatment * CIs - recovery.s * CIs - 
+    dCIs.dt <- infectiousness * CEs - treatment * CIs - recovery  * CIs - 
       death * CIs
     
-    dCIr.dt <- infectiousness * CEr - treatment * CIr - recovery.r * CIr - 
+    dCIr.dt <- infectiousness * CEr - treatment * CIr - recovery  * CIr - 
       death * CIr
     
-    dCTs.dt <- treatment * CIs - recovery.s * CTs - death * CTs - emergence * CTs
-    
-    dCTr.dt <- treatment * CIr - recovery.r * CTr - death * CTr + emergence * CTs
-    
-    dCR.dt <- recovery.s * CIs + recovery.r * CIr + recovery.s * CTs +
-      recovery.r * CTr - resusceptible * CR - death * CR
+    dCTs.dt <- treatment * CIs - recovery  * CTs - death * CTs - emergence * CTs
+
+    dCTr.dt <- treatment * CIr - recovery  * CTr - death * CTr + emergence * CTs
+
+    dCR.dt <- recovery  * CIs + recovery  * CIr + recovery  * CTs +
+      recovery  * CTr - resusceptible * CR - death * CR
     
     # dCTs.dt <- 0
     # 
     # dCTr.dt <- 0
     # 
-    # dCR.dt <- treatment * CIs + treatment * CIr + recovery.s * CIs + recovery.r * CIr + recovery.s * CTs + 
-    #   recovery.r * CTr - resusceptible * CR - death * CR
-    
-    
+    # dCR.dt <- treatment * CIs + treatment * CIr + recovery  * CIs + recovery  * CIr + recovery  * CTs + 
+    #   recovery  * CTr - resusceptible * CR - death * CR
+      
+      
     # Cattle with prophylaxis ----
     # 
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
     
-    dPS.dt <- birth.c * P - biterate * prob.infection.s * PS * VIs / N - 
-      biterate * prob.infection.r * PS * VIr / N + resusceptible * PR - 
+    dPS.dt <- birth.c * P - biterate * prob.infection * PS * VIs / N - 
+      biterate * prob.infection * PS * VIr / N + resusceptible * PR - 
       death * PS
     
-    dPEs.dt <- biterate * prob.infection.s * PS * VIs / N - infectiousness * 
+    dPEs.dt <- biterate * prob.infection * PS * VIs / N - infectiousness * 
       PEs - death * PEs 
     
-    dPEr.dt <- biterate * prob.infection.r * PS *VIr / N - infectiousness * 
+    dPEr.dt <- biterate * prob.infection * PS *VIr / N - infectiousness * 
       PEr - death * PEr 
     
-    dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery.s * PIs -
+    dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery  * PIs -
       death * PIs - emergence * PIs
     
-    dPIr.dt <- infectiousness * PEr - treatment * PIr - recovery.r * PIr -
+    dPIr.dt <- infectiousness * PEr - treatment * PIr - recovery  * PIr -
       death * PIr + emergence * PIs
     
-    dPTs.dt <- treatment * PIs - recovery.s * PTs - death * PTs - emergence * PTs 
+    dPTs.dt <- treatment * PIs - recovery  * PTs - death * PTs - emergence * PTs 
     
-    dPTr.dt <- treatment * PIr - recovery.r * PTr - death * PTr + emergence * PTs 
+    dPTr.dt <- treatment * PIr - recovery  * PTr - death * PTr + emergence * PTs 
     
-    dPR.dt <- recovery.s * PIs + recovery.r * PIr + recovery.s * PTs + 
-      recovery.r * PTr - resusceptible * PR - death * PR
+    dPR.dt <- recovery  * PIs + recovery  * PIr + recovery  * PTs + 
+      recovery  * PTr - resusceptible * PR - death * PR
     
     # Wildlife ----
     # 
     # WS, WEs, WEr, WIs, WIr, WTs, WTr, WR #I CHANGED  death to death.w here
     
-    dWS.dt <- birth.w * W - biterate * prob.infection.s * WS * VIs / N - 
-      biterate * prob.infection.r * WS * VIr / N + resusceptible * WR - 
+    dWS.dt <- birth.w * W - biterate * prob.infection * WS * VIs / N - 
+      biterate * prob.infection * WS * VIr / N + resusceptible * WR - 
       death.w * WS
     
-    dWEs.dt <- biterate * prob.infection.s * WS * VIs / N - infectiousness.w * 
+    dWEs.dt <- biterate * prob.infection * WS * VIs / N - infectiousness.w * 
       WEs - death.w * WEs 
     
-    dWEr.dt <- biterate * prob.infection.r * WS * VIr / N - infectiousness.w * 
+    dWEr.dt <- biterate * prob.infection * WS * VIr / N - infectiousness.w * 
       WEr - death.w * WEr 
     
-    dWIs.dt <- infectiousness.w * WEs - recovery.s.w * WIs - death.w * WIs + reversion * WIr
+    dWIs.dt <- infectiousness.w * WEs - recovery.w * WIs - death.w * WIs + reversion * WIr
     
-    dWIr.dt <- infectiousness.w * WEr - recovery.r.w * WIr - death.w * WIr - reversion * WIr
+    dWIr.dt <- infectiousness.w * WEr - recovery.w * WIr - death.w * WIr - reversion * WIr
     
-    dWR.dt <- recovery.s.w * WIs + recovery.r.w * WIr - resusceptible * WR - 
+    dWR.dt <- recovery.w * WIs + recovery.w * WIr - resusceptible * WR - 
       death.w * WR
     
     # Tsetse ----

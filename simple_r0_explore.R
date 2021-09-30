@@ -7,7 +7,7 @@
 
 ## Working Directory ----
 
-#setwd("/Users/shaunkeegan/Documents/OneDrive - University of Glasgow/research/AAT_AMR_main")
+setwd("/Users/shaunkeegan/Documents/OneDrive - University of Glasgow/research/AAT_AMR_main/model")
 
 ## Packages ----
 
@@ -21,19 +21,17 @@ source("AAT_AMR_main.R")
 
 # System
 
-prop.prophylaxis <- 0.0
+prop.prophylaxis <- 0
 
 # Cattle 
 birth.c          <- 1/365
 biterate         <- (0.3/4)/10
-prob.infection.s <- 0.46
-prob.infection.r <- 0.46
+prob.infection <- 0.46
 infectiousness   <- 1/20
 resusceptible    <- 0.01
 death            <- birth.c
 treatment        <- 0.01/2
-recovery.s       <- 0.01/2     
-recovery.r       <- 0.01  
+recovery       <- 0.01/2     
 emergence       <- 0
 
 # Wildlife 
@@ -44,8 +42,7 @@ prob.infection.r.w <- 0.46
 infectiousness.w   <- 1/20
 resusceptible.w    <- 1/100
 death.w            <- birth.w
-recovery.s.w       <- 0.01      
-recovery.r.w       <- 0.01  
+recovery.w       <- 0.01     
 reversion        <- 0
 
 # Vectors
@@ -55,9 +52,9 @@ feeding.rate     <-  0
 prob.infection.v <-  0.025
 infectiousness.v <-  1/3
 
-params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r, 
-                infectiousness, resusceptible, death, treatment, recovery.s, 
-                recovery.r, birth.v, death.v, feeding.rate, prob.infection.v, 
+params <- cbind(birth.c, biterate, prob.infection,
+                infectiousness, resusceptible, death, treatment, recovery, 
+                birth.v, death.v, feeding.rate, prob.infection.v, 
                 infectiousness.v, emergence, reversion)
 
 
@@ -111,26 +108,26 @@ inits <- cbind(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR,
 
 N <- NC + NW
 
-RH1V <- (NC/(N))*(biterate*prob.infection.s/death.v) * (infectiousness/(infectiousness + death))
+RH1V <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
 
-RWV <- (NW/N)*(biterate*prob.infection.s/death.v) * (infectiousness.w/(infectiousness.w + death.w))
+RWV <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
 
 
-RVH1 <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery.s + death)) * (infectiousness.v/(infectiousness.v + death.v)) +
+RVH1 <- prob.infection.v * biterate * (NV/N) * (1/(treatment + recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) +
   
-  prob.infection.v * biterate * (NV/N) * (1/(recovery.s + death)) * (infectiousness.v/(infectiousness.v + death.v)) * 
+  prob.infection.v * biterate * (NV/N) * (1/(recovery + death)) * (infectiousness.v/(infectiousness.v + death.v)) * 
   
-  (treatment/((treatment + recovery.s + death)))
+  (treatment/((treatment + recovery + death)))
 
 
 
-RVW  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.s.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
+RVW  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
 
 R0 <- sqrt(RH1V * RVH1 + RWV * RVW)
 
 
 
-
+R0
 
 
 
@@ -239,4 +236,5 @@ RWV
 RVW
 R0
 
+head(out)
 tail(out,3)
