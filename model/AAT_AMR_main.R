@@ -74,13 +74,13 @@ AAT_AMR_main <- function(times, init, parms){
     # CS, CEs, CEr, CIs, CIr, CTs, CTr, CR
     
     dCS.dt <- birth.c * C - biterate * prob.infection * CS * VIs / N -  
-      biterate * prob.infection * CS * VIr / N + resusceptible * CR - 
+      biterate * (prob.infection * fit.adj) * CS * VIr / N + resusceptible * CR - 
       death * CS
     
     dCEs.dt <- biterate * prob.infection * CS * VIs / N - infectiousness * 
       CEs - death * CEs 
     
-    dCEr.dt <- biterate * prob.infection * CS * VIr / N - infectiousness * 
+    dCEr.dt <- biterate * (prob.infection * fit.adj) * CS * VIr / N - infectiousness * 
       CEr - death * CEr 
     
     dCIs.dt <- infectiousness * CEs - treatment * CIs - recovery  * CIs - 
@@ -89,12 +89,12 @@ AAT_AMR_main <- function(times, init, parms){
     dCIr.dt <- infectiousness * CEr - treatment * CIr - recovery  * CIr - 
       death * CIr
     
-    dCTs.dt <- treatment * CIs - recovery  * CTs - death * CTs - emergence * CTs
+    dCTs.dt <- treatment * CIs - recovery.st  * CTs - death * CTs - emergence * CTs
 
-    dCTr.dt <- treatment * CIr - recovery  * CTr - death * CTr + emergence * CTs
+    dCTr.dt <- treatment * CIr - (recovery * rec.adj)  * CTr - death * CTr + emergence * CTs
 
-    dCR.dt <- recovery  * CIs + recovery  * CIr + recovery  * CTs +
-      recovery  * CTr - resusceptible * CR - death * CR
+    dCR.dt <- recovery  * CIs + recovery  * CIr + recovery.st  * CTs +
+      (recovery * rec.adj)  * CTr - resusceptible * CR - death * CR
     
     # dCTs.dt <- 0
     # 
@@ -109,13 +109,13 @@ AAT_AMR_main <- function(times, init, parms){
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
     
     dPS.dt <- birth.c * P - biterate * prob.infection * PS * VIs / N - 
-      biterate * prob.infection * PS * VIr / N + resusceptible * PR - 
+      biterate * (prob.infection * fit.adj) * PS * VIr / N + resusceptible * PR - 
       death * PS
     
     dPEs.dt <- biterate * prob.infection * PS * VIs / N - infectiousness * 
       PEs - death * PEs 
     
-    dPEr.dt <- biterate * prob.infection * PS *VIr / N - infectiousness * 
+    dPEr.dt <- biterate * (prob.infection * fit.adj) * PS *VIr / N - infectiousness * 
       PEr - death * PEr 
     
     dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery  * PIs -
@@ -124,25 +124,25 @@ AAT_AMR_main <- function(times, init, parms){
     dPIr.dt <- infectiousness * PEr - treatment * PIr - recovery  * PIr -
       death * PIr + emergence * PIs
     
-    dPTs.dt <- treatment * PIs - recovery  * PTs - death * PTs - emergence * PTs 
+    dPTs.dt <- treatment * PIs - recovery.st  * PTs - death * PTs - emergence * PTs 
     
-    dPTr.dt <- treatment * PIr - recovery  * PTr - death * PTr + emergence * PTs 
+    dPTr.dt <- treatment * PIr - (recovery * rec.adj)  * PTr - death * PTr + emergence * PTs 
     
-    dPR.dt <- recovery  * PIs + recovery  * PIr + recovery  * PTs + 
-      recovery  * PTr - resusceptible * PR - death * PR
+    dPR.dt <- recovery  * PIs + recovery  * PIr + recovery.st  * PTs + 
+      (recovery * rec.adj)  * PTr - resusceptible * PR - death * PR
     
     # Wildlife ----
     # 
     # WS, WEs, WEr, WIs, WIr, WTs, WTr, WR #I CHANGED  death to death.w here
     
     dWS.dt <- birth.w * W - biterate * prob.infection * WS * VIs / N - 
-      biterate * prob.infection * WS * VIr / N + resusceptible * WR - 
+      biterate * (prob.infection * fit.adj) * WS * VIr / N + resusceptible * WR - 
       death.w * WS
     
     dWEs.dt <- biterate * prob.infection * WS * VIs / N - infectiousness.w * 
       WEs - death.w * WEs 
     
-    dWEr.dt <- biterate * prob.infection * WS * VIr / N - infectiousness.w * 
+    dWEr.dt <- biterate * (prob.infection * fit.adj) * WS * VIr / N - infectiousness.w * 
       WEr - death.w * WEr 
     
     dWIs.dt <- infectiousness.w * WEs - recovery.w * WIs - death.w * WIs + reversion * WIr
@@ -159,7 +159,8 @@ AAT_AMR_main <- function(times, init, parms){
     dVS.dt <- birth.v * V - 
       prob.infection.v * biterate * (CIs/N) * VS - 
       prob.infection.v * biterate * (CIr/N) * VS - 
-      prob.infection.v * biterate * (CTs/N) * VS - 
+      prob.infection.v * biterate * (CTs/N) * VS -
+      prob.infection.v * biterate * (CTr/N) * VS -
       prob.infection.v * biterate * (PIs/N) * VS - 
       prob.infection.v * biterate * (PIr/N) * VS - 
       prob.infection.v * biterate * (PTr/N) * VS - 
