@@ -69,7 +69,7 @@ cattle <- 50 # Total number of cattle
 
 # C - Cattle
 NC <- cattle
-CIr <- 1    # Infected (drug resistant strain)
+CIr <- 0    # Infected (drug resistant strain)
 CIs <- 1    # Infected (drug sensitive strain)
 CS  <- NC * (1 - prop.prophylaxis) - CIs - CIr # Susceptible
 CEs <- 0    # Exposed (drug sensitive strain)
@@ -277,9 +277,9 @@ final.prev.flies
 
 
 
-NC <- tail(out$CS, 1)
-NW <- tail(out$WS, 1)
-NV <- tail(out$VS, 1)
+#NC <- tail(out$CS, 1)
+#NW <- tail(out$WS, 1)
+#NV <- tail(out$VS, 1)
 
 RH1Vs <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
 RWVs <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
@@ -292,7 +292,10 @@ R0s <- sqrt(RH1Vs * RVH1s + RWVs * RVWs)
 R0s
 
 R0sen
-tail(out$CS, 1) * as.numeric(R0sen[1,"RH1Vs"])
+
+# RHV*(SV/NV) * RVH *(S/NC)
+tail(out$CS, 1) / NC * as.numeric(R0sen[1,"RH1Vs"]) * tail(out$VS, 1) / NV * as.numeric(R0sen[1,"RVH1s"]) 
+# Put in function as equilibrium check 
 
 RH1Vr <- (NC/(N))*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness/(infectiousness + death))
 RWVr <- (NW/N)*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness.w/(infectiousness.w + death.w))
