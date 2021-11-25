@@ -21,10 +21,10 @@ for (i in 1:(No+1)){
   death            <- birth.c
   treatment        <- 1/30
   recovery       <- 1/100
-  recovery.st     <- recovery*10
+  recovery.st     <- recovery*250
   emergence       <- 0
-  fit.adj         <- .7
-  rec.adj         <- .1
+  fit.adj         <- 0.95
+  rec.adj         <- 1
   
   # Wildlife 
   birth.w          <- 1/365
@@ -56,7 +56,7 @@ for (i in 1:(No+1)){
   
   # C - Cattle
   NC <- cattle
-  CIr <- 1    # Infected (drug resistant strain)
+  CIr <- 0    # Infected (drug resistant strain)
   CIs <- 1    # Infected (drug sensitive strain)
   CS  <- NC * (1 - prop.prophylaxis) - CIs - CIr # Susceptible
   CEs <- 0    # Exposed (drug sensitive strain)
@@ -98,39 +98,14 @@ for (i in 1:(No+1)){
                  VS, VEs, VEr, VIs, VIr)
   
   N <- NC + NW
+  R0sen <- r0sen(inits, parms)  #R0 function shouldn't need "inits"
+  R0sen
+  R0s <- R0sen[1,"R0s"]
   
-  RH1Vs <- (NC/(N))*(biterate*prob.infection/death.v) * (infectiousness/(infectiousness + death))
-  RWVs <- (NW/N)*(biterate*prob.infection/death.v) * (infectiousness.w/(infectiousness.w + death.w))
-  RVH1s <- prob.infection.v * biterate * (NV/N) * # rate of biting
-    (1/(treatment + recovery + death)) * # length of time host infection in I
-    (infectiousness.v/(infectiousness.v + death.v)) + # proportion of vectors that end up infected
-    prob.infection.v * biterate * (NV/N) * #rate of biting
-    (1/(recovery.st + death)) *  # length of time host infected in T
-    (infectiousness.v/(infectiousness.v + death.v)) * # proportion of vectors that end up infected
-    (treatment/((treatment + recovery + death))) # proportion of hosts proceeding from I to T
+  R0res <- r0res(inits, parms)
+  R0res
+  R0r <- R0res[1,"R0r"]
   
-  RVWs  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
-  
-  R0s <- sqrt(RH1Vs * RVH1s + RWVs * RVWs)
-  
-  
-  
-  
-  RH1Vr <- (NC/(N))*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness/(infectiousness + death))
-  RWVr <- (NW/N)*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness.w/(infectiousness.w + death.w))
-  
-  RVH1r <- prob.infection.v * biterate * (NV/N) *     #rate of biting
-    (1/(treatment + (recovery) + death)) *  #length of time host infectious (in I category) 
-    (infectiousness.v/(infectiousness.v + death.v)) + #proportion of vectors that actually end up as an infected vector
-    
-    prob.infection.v * biterate * (NV/N) *            #rate of biting again
-    (1/(recovery * rec.adj + death)) *                          #time host spends in treated state
-    (infectiousness.v/(infectiousness.v + death.v)) *  #proportion of vectors that actually end up as an infected vector
-    (treatment/((treatment + (recovery) + death)))  #proportion og hosts proceeding to treated state
-  
-  RVWr  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
-  
-  R0r <- sqrt(RH1Vr * RVH1r + RWVr * RVWr)
   
   SusR0[i] <- R0s
   ResR0[i] <- R0r
@@ -141,11 +116,11 @@ ResR0
 SusR0
 
 
-par(mfrow=c(2,1))
-plot(ResR0^2 ~ Adj, type= 'l', col = 'red3', lwd = 3,
+par(mfrow=c(1,2))
+plot(ResR0 ~ Adj, type= 'l', col = 'red3', lwd = 3,
      ylab = "R0", xlab = "Wildlife Population (N)", 
-     main = paste("Fitness Adjustment =", fit.adj,"\n Recovery Adjustment =", rec.adj ), ylim = c(0,max(SusR0)^2))
-lines(SusR0^2 ~ Adj, col = 'darkblue', lwd = 3, lty = 2)
+     main = paste("Fitness Adjustment =", fit.adj), ylim = c(0,max(ResR0)))
+lines(SusR0 ~ Adj, col = 'darkblue', lwd = 3, lty = 2)
 abline(h = 1, lty = 2)
 legend("topright", c("Resistant", "Sensitive"), col = c('red3', 'darkblue'),pch = 15, bty = 'n')
 

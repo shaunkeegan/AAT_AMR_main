@@ -18,7 +18,7 @@
 ##         http://github.com/shaunkeegan/AAT_AMR_main/scenarios
 
 
-AAT_AMR_main <- function(times, init, parms){
+AAT_AMR_dens_dep <- function(times, init, parms){
   
   # C - Cattle
   CS  <- init[1] # Susceptible
@@ -55,7 +55,7 @@ AAT_AMR_main <- function(times, init, parms){
   VIs <- init[26] # Infected (drug sensitive strain)
   VIr <- init[27] # Infected (drug resistant strain) 
   
-
+  
   
   
   with(as.list(parms),{
@@ -90,9 +90,9 @@ AAT_AMR_main <- function(times, init, parms){
       death * CIr
     
     dCTs.dt <- treatment * CIs - recovery.st  * CTs - death * CTs - emergence * CTs
-
+    
     dCTr.dt <- treatment * CIr - (recovery * rec.adj)  * CTr - death * CTr + emergence * CTs
-
+    
     dCR.dt <- recovery  * CIs + recovery  * CIr + recovery.st  * CTs +
       (recovery * rec.adj)  * CTr - resusceptible * CR - death * CR
     
@@ -102,8 +102,8 @@ AAT_AMR_main <- function(times, init, parms){
     # 
     # dCR.dt <- treatment * CIs + treatment * CIr + recovery  * CIs + recovery  * CIr + recovery  * CTs + 
     #   recovery  * CTr - resusceptible * CR - death * CR
-      
-      
+    
+    
     # Cattle with prophylaxis ----
     # 
     # PS, PEs, PEr, PIs, PIr, PTs, PTr, PR
@@ -156,7 +156,7 @@ AAT_AMR_main <- function(times, init, parms){
     # 
     # VS, VEs, VEr, VIs, VIr, 
     
-    dVS.dt <- birth.v * V - 
+    dVS.dt <- birth.v * V  * (1 - V / K ) - 
       
       prob.infection.v * biterate * (CIs/N) * VS - 
       prob.infection.v * biterate * (CIr/N) * VS - 

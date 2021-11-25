@@ -17,13 +17,16 @@ r0sen <- function(inits, parms){
   
   RVWs  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
   
-  R0s <- sqrt(RH1Vs * RVH1s + RWVs * RVWs)
+  #R0s <- sqrt(RH1Vs * RVH1s + RWVs * RVWs)
+  R0s <- RH1Vs * RVH1s + RWVs * RVWs  #LM: changed to match Hargrove
   
   return(cbind(RH1Vs, RWVs, RVH1s, RVWs, R0s))
   
 }
 
 r0res <- function(inits, parms){
+  
+  N <- NC + NW  #LM: added
   
   RH1Vr <- (NC/(N))*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness/(infectiousness + death))
   RWVr <- (NW/N)*(biterate*(prob.infection * fit.adj)/death.v) * (infectiousness.w/(infectiousness.w + death.w))
@@ -39,7 +42,9 @@ r0res <- function(inits, parms){
   
   RVWr  <- prob.infection.v * biterate * (NV/N) * (1/(recovery.w + death.w)) * (infectiousness.v/(infectiousness.v + death.v))
   
-  R0r <- sqrt(RH1Vr * RVH1r + RWVr * RVWr)
+  #R0r <- sqrt(RH1Vr * RVH1r + RWVr * RVWr)
+  R0r <- RH1Vr * RVH1r + RWVr * RVWr  #LM: changed to match Hargrove
   
   return(cbind(RH1Vr, RWVr, RVH1r, RVWr, R0r))
 }
+
