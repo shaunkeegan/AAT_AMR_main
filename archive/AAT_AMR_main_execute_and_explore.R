@@ -22,43 +22,45 @@ source("model/AAT_AMR_main.R")
 # System
 
 prop.prophylaxis <- 0
-
 # Cattle 
 birth.c          <- 1/365
-biterate         <- (0.3/4)/10
-prob.infection.s <- 0.46
-prob.infection.r <- 0.46
-infectiousness   <- 1/20
+biterate         <- 0.8/4
+prob.infection   <- 0.46         
+infectiousness   <- 1/15
 resusceptible    <- 1/100
 death            <- birth.c
-treatment        <- 1/6
-recovery.s       <- 0.01      
-recovery.r       <- 0.01  
-emergence       <- 1/365
+recovery         <- 1/100 
+#prop_treat       <- Trt_pop[j]   #LM: extra param to help us specify the treatment rate
+treatment        <- prop_treat * (recovery + death)/(1 - prop_treat)
+recovery.st      <- recovery * 250 #LM: adjusted so that R0 drops below 1 when 99% treated to reflect Hargrove
+emergence        <- 0
+fit.adj          <- 0.95  #LM: prefer to always use 0.8 etc rather than .8 as much less likely to have mistakes through typos or misreading 
+rec.adj          <- 1
 
 # Wildlife 
-birth.w          <- 0
-biterate.w         <- 0.3/4
+birth.w            <- 1/365
+biterate.w         <- 0.7/4 #think we should keep the same biterate
 prob.infection.s.w <- 0.46
 prob.infection.r.w <- 0.46
-infectiousness.w   <- 1/9
+infectiousness.w   <- 1/20
 resusceptible.w    <- 1/100
 death.w            <- birth.w
-recovery.s.w       <- 0.01      
-recovery.r.w       <- 0.01  
-reversion        <- 0
+recovery.w         <- recovery     
+reversion          <- 0
 
 # Vectors
-birth.v          <-  1/30
-death.v          <-  1/30 
-feeding.rate     <-  3   
+birth.v          <-  0.03
+death.v          <-  birth.v #LM: better this way than have to type in 0.03 in each place
+feeding.rate     <-  0   
 prob.infection.v <-  0.025
-infectiousness.v <-  1/3
+incubation       <- 20
+infectiousness.v <-  death.v * exp(- death.v * incubation) / (1 - exp(- death.v *incubation) )
 
-params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r, 
-               infectiousness, resusceptible, death, treatment, recovery.s, 
-               recovery.r, birth.v, death.v, feeding.rate, prob.infection.v, 
-               infectiousness.v, emergence, reversion)
+params <- cbind(birth.c, biterate, prob.infection, fit.adj, rec.adj, recovery.st,  #LM: replaced trt.adj with rec.adj
+                infectiousness, resusceptible, death, treatment, recovery, 
+                birth.v, death.v, feeding.rate, prob.infection.v, 
+                infectiousness.v, emergence, reversion)
+
 
 
 ## Initial Conditions ----

@@ -26,12 +26,12 @@ prop.prophylaxis <- 0
 qf <- 0.96
 qn <- 0.98
 feed.cyc <- 4
-p <- 0
+p <- 0.1
 
 
 # Cattle 
 birth.c          <- 1/365
-biterate         <- (0.3/feed.cyc)
+biterate         <- 0.3/feed.cyc
 prob.infection.s <- 0.46
 prob.infection.r <- 0.46
 infectiousness   <- 1/20
@@ -55,16 +55,16 @@ recovery.r.w       <- 0.01
 reversion        <- 0
 
 # Vectors
-birth.v          <-  0.03*2
-death.v          <-  -1 *log((1-p)* qf * qn^feed.cyc)/feed.cyc 
-feeding.rate     <-  3   
+ 
+birth.v          <-  0.084 # 0.03040821 #0.025*0.008 
+death.v          <-  0.03040821 #-1 *log((1-p)* qf * qn^feed.cyc)/feed.cyc 
 prob.infection.v <-  0.025
 infectiousness.v <-  1/3
 
 params <- cbind(birth.c, biterate, prob.infection.s, prob.infection.r, 
                 infectiousness, resusceptible, death, treatment, recovery.s, 
-                recovery.r, birth.v, death.v, feeding.rate, prob.infection.v, 
-                infectiousness.v, emergence, reversion)
+                recovery.r, birth.v, death.v, prob.infection.v, 
+                infectiousness.v, emergence, reversion, test)
 
 
 ## Initial Conditions ----
@@ -105,7 +105,7 @@ VEs <- 0    # Exposed (drug sensitive strain)
 VEr <- 0    # Exposed (drug resistant strain)
 VIs <- 0    # Infected (drug sensitive strain)
 VIr <- 0    # Infected (drug resistant strain) 
-K <- 10000 
+
 
 inits <- cbind(CS, CEs, CEr, CIs, CIr, CTs, CTr, CR, 
                PS, PEs, PEr, PIs, PIr, PTs, PTr, PR, 
