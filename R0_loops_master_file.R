@@ -7,28 +7,34 @@
 
 ## Working Directory ----
 
-#setwd("/Users/shaunkeegan/Documents/OneDrive - University of Glasgow/research/AAT_AMR_main/model")
+setwd("/Users/shaunkeegan/Documents/OneDrive - University of Glasgow/research/AAT_AMR_main/")
 
 ## Packages ----
 
 library(deSolve)
 library(tictoc)
 library(progress)
+library(ggplot2)
+library(dplyr)
+library(gghighlight)
+library(cowplot)
 
 ## Model ----
 
 source("model/AAT_AMR_main.R")
-source("model/r0_functions_LM.R")
+source("model/AAT_AMR_dens_dep.R")
+source("functions/r0_functions.R")
+source("functions/plot_functions.R")
 
-loops <- FALSE
+loops <- TRUE
 
 if (loops == TRUE){
   N_wl <- seq(0, 250, by = 50)
-  Trt_popA <- seq(0, 0.9, by = 0.05)
+  Trt_popA <- seq(0, 0.9, by = 0.2)      #full from 0-1
   Trt_popB <- seq(0.9, 0.99, by = 0.01)
   Trt_pop <- c(Trt_popA, Trt_popB)
   vec_pop <- c(5000, 3000, 1000)
-  birth_vec <- seq(0.03, 0.15, by = 0.02)
+  birth_vec <- seq(0.03, 0.15, by = 0.03) #second to be 0.15
   fit.adj_vec <- c(0.9, 0.95, 0.99, 1.0)
 } else {
   N_wl <- 0
@@ -73,11 +79,9 @@ for(fit.adj in fit.adj_vec){
           resusceptible    <- 1/100
           death            <- birth.c
           recovery         <- 1/100 
-          #prop_treat       <- Trt_pop[j]   #LM: extra param to help us specify the treatment rate
           treatment        <- prop_treat * (recovery + death)/(1 - prop_treat)
           recovery.st      <- recovery * 250 #LM: adjusted so that R0 drops below 1 when 99% treated to reflect Hargrove
           emergence        <- 0
-          #fit.adj          <- 0.95  #LM: prefer to always use 0.8 etc rather than .8 as much less likely to have mistakes through typos or misreading 
           rec.adj          <- 1
           
           # Wildlife 
@@ -201,11 +205,12 @@ for(fit.adj in fit.adj_vec){
           Rsen <- fC*R0sen[1] * fV*R0sen[3] + fW * R0sen[2] * fV *R0sen[4]  #Hurrah
           Rres <- fC*R0res[1] * fV*R0res[3] + fW * R0res[2] * fV *R0res[4]
           
-          selected_outputs <- data.frame(CS = last$CS, total.cattle = last$total.cattle, treat_prop = last$treat_prop, W_st = out[1, "WS"],
+          selected_outputs <- data.frame(#CS = last$CS, total.cattle = last$total.cattle, treat_prop = last$treat_prop, 
+                                         W_st = out[1, "WS"],
                      R_eq_sen = Rsen, R0_sen = R0s, R_eq_res = Rres, R0_res = R0r, No_trt_cat = treatment * last$CIs * 365.25,
                      Incidence = infectiousness * last$CEs * 365.25, Vector_no = NV, Prob_onward_tran = 1-dpois(0,Rres),
                      Risk = (1-dpois(0,Rres)) * treatment * last$CIs * 365.25 ,
-                     prevalence = last$CIs/NC, vector_mortality = death.v, fit.adj = fit.adj)
+                     prevalence = last$CIs/NC, vector_birth = birth.v, vector_mortality = death.v, fit.adj = fit.adj)
           df = rbind(df, selected_outputs)
           
           wide <- cbind(selected_outputs, last)
@@ -220,4 +225,30 @@ toc()
 
 tail(df)
 tail(round(df2,2))
+
+#write.csv(df, "output_files/output_short_jan2022.csv")
+#write.csv(df2, "output_files/output_jan2022.csv")
+
+output_jan2022 <- df2
+
+
+unique(df2$vector_birth) # 0.03 0.06 0.09 0.12 0.15
+unique(df2$fit.adj) # 0.90 0.95 0.99 1.00
+unique(df2$treat_prop) # 0.00 0.20 0.40 0.60 0.80 0.90 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99
+plot_R0_Sen(df2, trtprops = c(0,0.6,0.99), fitadj = 1, vecbirth =0.03) #Ro plots: default matches Hargrove; R0 declines with wildlife 
+
+unique(df2$W_st) # 0  50 100 150 200 250
+plot_R0_Sen_wl(output_jan2022, Wn = c(0, 100, 250), fitadj = 1, vecbirth =0.03)
+
+plot_res_v_sen(output_jan2022, Wn =c(0,50,250), fitadj = 1, vecbirth = 0.03)
+
+plot_prev_v_trt(output_jan2022, Wn = c(250,100,0), fitadj = 1, vecbirth = 0.03)
+
+plot_inc_v_trt(output_jan2022, Wn = c(250,100, 0), fitadj = 1, vecbirth = 0.03)
+
+plot_trtcat_v_trt(output_jan2022, Wn = c(250,100,0), fitadj = 1, vecbirth = 0.03)
+
+plot_onward_v_trt(output_jan2022, Wn = c(250,100, 0), fitadj = 1, vecbirth = 0.03)
+
+plot_risk_v_trt(output_jan2022, Wn = c(250,100,0), fitadj =1, vecbirth = 0.03)
 
