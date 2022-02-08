@@ -34,14 +34,14 @@ if (loops == TRUE) {
   N_wl <- seq(0, 250, by = 50)
   Trt_popA <- seq(0, 0.9, by = 0.2)      #full from 0-1
   Trt_popB <- seq(0.9, 0.99, by = 0.01)
-  Trt_pop <- Trt_popA #c(Trt_popA, Trt_popB)
+  Trt_pop <- Trt_popB #c(Trt_popA, Trt_popB)
   vec_pop <- c(5000, 3000, 1000)
   #birth_vec <- seq(0.03, 0.15, by = 0.03) #second to be 0.15
   fit.adj_vec <- c(0.9, 0.95, 0.99, 1.0)
 } else {
   N_wl <- 0
-  Trt_pop <- c(0.99)
-  vec_pop <- c(5000)
+  Trt_pop <- c(0.91)
+  vec_pop <- c(3000)
   fit.adj_vec <- c(0.9)
 }
 
@@ -123,8 +123,7 @@ for (fit.adj in fit.adj_vec) {
           NC  <- 50
           CIr <- 0    # Infected (drug resistant strain)
           CIs <- 1    # Infected (drug sensitive strain)
-          CS  <-
-            NC * (1 - prop.prophylaxis) - CIs - CIr # Susceptible
+          CS  <- NC * (1 - prop.prophylaxis) - CIs - CIr # Susceptible
           CEs <- 0    # Exposed (drug sensitive strain)
           CEr <- 0    # Exposed (drug resistant strain)
           
@@ -133,8 +132,7 @@ for (fit.adj in fit.adj_vec) {
           CR  <- 0    # Recovered
           
           # P - Prophylactically treated cattle
-          PS  <-
-            NC * prop.prophylaxis    # Susceptible   #LM: changed cattle to NC
+          PS  <- NC * prop.prophylaxis    # Susceptible   #LM: changed cattle to NC
           PEs <- 0    # Exposed (drug sensitive strain)
           PEr <- 0    # Exposed (drug resistant strain)
           PIs <- 0    # Infected (drug sensitive strain)
@@ -175,7 +173,7 @@ for (fit.adj in fit.adj_vec) {
           
           ## Times ----
           
-          times <- seq(0, 3000, 1)
+          times <- seq(0, 2000, 1)
           
           
           ## RUN MODEL ----
@@ -245,15 +243,9 @@ tail(round(df2, 2))
 
 
 par(mfrow = c(2, 2))
-plot(
-  out$CS ~ out$times,
-  type = 'l',
-  ylim = c(0, max(out[, 2]) + 5),
-  lwd = 3,
-  col = 'blue',
-  main = paste(round(simpleR0, 2)),
-  xlab = "Time",
-  ylab = "Number"
+plot(out$CS ~ out$times, type = 'l', ylim = c(0, max(out[, 2]) + 5), 
+     lwd = 3, col = 'blue', main = "Cattle (no Prophylaxis)", 
+     xlab = "Time", ylab = "Number"
 )
 lines(out$CEs ~ out$times, lwd = 3, col = 'orange') # Exposed
 lines(out$CEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
@@ -329,34 +321,35 @@ lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
 
 
 
-output_feb2022 <- df2
+#output_feb2022 <- df2
 
 #write.csv(df, "output_files/output_short_feb2022.csv")
 #write.csv(df2, "output_files/output_feb2022.csv")
 
 #output_feb2022 <- read.csv("output_files/output_feb2022.csv", header = T)
-save(output_feb2022, file = "output_files/output_feb2022.RDA")
-load("output_files/output_feb2022.RDA")
-unique(df2$vector_birth) # 0.03 0.06 0.09 0.12 0.15
-unique(df2$fit.adj) # 0.90 0.95 0.99 1.00
-unique(df2$treat_prop) # 0.00 0.20 0.40 0.60 0.80 0.90 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99
-
-plot_R0_Sen_dd(df2, trtprops = c(0,0.6,0.8), fitadj = 1) #Ro plots: default matches Hargrove; R0 declines with wildlife
-
-unique(df2$W_st) # 0  50 100 150 200 250
-plot_R0_Sen_wl_dd(output_feb2022, Wn = c(0, 100, 250), fitadj = 1)
-
-plot_res_v_sen_dd(output_feb2022, Wn =c(0,50,250), fitadj = 1)
-
-plot_prev_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj = 1)
-
-plot_inc_v_trt_dd(output_feb2022, Wn = c(250,100, 0), fitadj = 1)
-
-plot_trtcat_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj = 1)
-
-plot_onward_v_trt_dd(output_feb2022, Wn = c(250,100, 0), fitadj = 1)
-
-plot_risk_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj =1)
-
-
-
+#save(output_feb2022, file = "output_files/output_feb2022.RDA")
+#load("output_files/output_jan2022.RDA")
+#unique(df2$vector_birth) # 0.03 0.06 0.09 0.12 0.15
+#unique(df2$fit.adj) # 0.90 0.95 0.99 1.00
+#unique(df2$treat_prop) # 0.00 0.20 0.40 0.60 0.80 0.90 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99
+#
+#plot_R0_Sen_dd(df2, trtprops = c(0,0.6,0.8), fitadj = 1) #Ro plots: default matches Hargrove; R0 declines with wildlife
+#
+#unique(df2$W_st) # 0  50 100 150 200 250
+#plot_R0_Sen_wl_dd(output_feb2022, Wn = c(0, 100, 250), fitadj = 1)
+#
+#plot_res_v_sen_dd(output_feb2022, Wn =c(0,50,250), fitadj = 1)
+#
+#plot_prev_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj = 1)
+#
+#plot_inc_v_trt_dd(output_feb2022, Wn = c(250,100, 0), fitadj = 1)
+#
+#plot_trtcat_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj = 1)
+#
+#plot_onward_v_trt_dd(output_feb2022, Wn = c(250,100, 0), fitadj = 1)
+#
+#plot_risk_v_trt_dd(output_feb2022, Wn = c(250,100,0), fitadj =1)
+#
+#
+#
+#
