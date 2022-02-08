@@ -5,7 +5,7 @@
 qf <- 0.96
 qn <- 0.98
 feed.cyc <- 4
-p <- 0.1
+p <- 0
 
 mat <- matrix(1:2000, ncol = 2)
 mat[] <- NA
