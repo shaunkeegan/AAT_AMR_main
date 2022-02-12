@@ -35,17 +35,19 @@ if (loops == TRUE) {
   Trt_popA <- seq(0, 0.9, by = 0.2)      #full from 0-1
   Trt_popB <- seq(0.9, 0.99, by = 0.01)
   Trt_pop <- c(Trt_popA, Trt_popB)
-  vec_pop <- c(5000, 3000, 1000)
-  #birth_vec <- seq(0.03, 0.15, by = 0.03) #second to be 0.15
+  K.vec <- c(10000, 6000, 2000)
   fit.adj_vec <- c(0.9, 0.95, 0.99, 1.0)
   birth.adj.vec <- c(2)
-  prop.insecticide.vec <- c(0.05,0.1,0.15,0.2,0.25,0.3)
+  prop.insecticide.vec <- c(0.05,0.1,0.3)
 } else {
   N_wl <- 0
   Trt_pop <- c(0.9)
   vec_pop <- c(3000)
   fit.adj_vec <- c(1)
   birth.adj <- 1
+  K <- 10000
+  prop.insecticide.vec <- 0
+  birth.adj.vec <- 2
 }
 
 
@@ -54,7 +56,7 @@ df <-
              R0_sen = c(), R_eq_res = c(), R0_res = c(), No_trt_cat = c(), 
              Incidence = c(), Vector_no = c(), Prob_onward_tran = c(), 
              Risk = c(), prevalence = c(), vector_mortality = c(), fit.adj = c(), 
-             prop.insecticide =c(), birth.adj =c())
+             prop.insecticide =c(), birth.adj =c(), eq_pop = c())
 
 df2 <- data.frame()
 
@@ -66,8 +68,8 @@ for (birth.adj in birth.adj.vec) {
     print(paste0("loop1, prop.insecticide = ", prop.insecticide, "; Iteration ", which(prop.insecticide.vec == prop.insecticide), " of ", length(prop.insecticide.vec)))
     for (fit.adj in fit.adj_vec) {
       print(paste0("loop3, fit.adj = ", fit.adj, "; Iteration ", which(fit.adj_vec == fit.adj), " of ", length(fit.adj_vec)))
-      for (NV in vec_pop) {
-        print(paste0("loop4, NV = ", NV, "; Iteration ", which(vec_pop == NV), " of ", length(vec_pop)))
+      for (K in K.vec) {
+        print(paste0("loop4, K = ", K, "; Iteration ", which(K.vec == K), " of ", length(K.vec)))
         for (NW in N_wl) {
           print(paste0("loop5, NW = ", NW, "; Iteration ", which(NW == N_wl), " of ", length(N_wl)))
           for (prop_treat in Trt_pop) {
@@ -118,7 +120,7 @@ for (birth.adj in birth.adj.vec) {
             prob.infection.v <-  0.025
             incubation       <-  20
             infectiousness.v <- death.v * exp(-death.v * incubation) / (1 - exp(-death.v * incubation))
-            K <- 10000
+
             
             
             params <- cbind(birth.c, biterate, prob.infection, fit.adj, rec.adj, recovery.st, infectiousness, resusceptible, death, treatment, recovery, birth.v, death.v, feeding.rate, prob.infection.v, infectiousness.v, emergence, reversion, K)
@@ -160,7 +162,7 @@ for (birth.adj in birth.adj.vec) {
             WR  <- 0    # Recovered
             
             # V - Vectors
-            #NV  <-
+            NV  <- K/2
             VS  <- NV # Susceptible
             VEs <- 0    # Exposed (drug sensitive strain)
             VEr <- 0    # Exposed (drug resistant strain)
@@ -235,7 +237,8 @@ for (birth.adj in birth.adj.vec) {
                                            Risk = (1 - dpois(0, Rres)) * treatment * last$CIs * 365.25 , 
                                            prevalence = last$CIs / NC, vector_birth = birth.v, 
                                            vector_mortality = death.v, fit.adj = fit.adj, 
-                                           prop.insecticide = prop.insecticide, birth.adj = birth.adj)
+                                           prop.insecticide = prop.insecticide, birth.adj = birth.adj,
+                                           eq_pop = K * (1 - 1/birth.adj))
             df = rbind(df, selected_outputs)
             
             wide <- cbind(selected_outputs, last)
@@ -336,14 +339,14 @@ lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
 
 #save.mat <- df2
 
-#output_feb2022 <- df2
+output_feb2022_dd <- df2
 
 #write.csv(df, "output_files/output_short_feb2022.csv")
 #write.csv(df2, "output_files/output_feb2022.csv")
 
 #output_feb2022 <- read.csv("output_files/output_feb2022.csv", header = T)
-#save(output_feb2022, file = "output_files/output_feb2022.RDA")
-#load("output_files/output_jan2022.RDA")
+save(output_feb2022_dd, file = "output_files/output_feb2022_dd.RDA")
+load("output_files/output_feb2022_dd.RDA")
 #unique(df2$vector_birth) # 0.03 0.06 0.09 0.12 0.15
 #unique(df2$fit.adj) # 0.90 0.95 0.99 1.00
 #unique(df2$treat_prop) # 0.00 0.20 0.40 0.60 0.80 0.90 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99

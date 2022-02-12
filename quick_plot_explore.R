@@ -56,3 +56,5 @@ a30 <- plot.func(ins.dat, Wn = c(0, 100, 250), fitadj = 1)
 #legend <- get_legend(p + theme(legend.box.margin = margin(0, 0, 0, 12)))
 plot_grid(a05,a10,a30,nrow = 3)
 
+
+df2$eq_pop
