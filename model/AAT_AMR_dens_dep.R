@@ -3,8 +3,8 @@
 ## antimicrobial resistance (AMR) between cattle, tsetse fly vectors and 
 ## wildlife. 
 
-## Lead Author:   Shaun Keegan (shaun.keegan@glasgow.ac.uk)
-## Other Authors: Louise Matthews (louise.mattthews@glasgow.ac.uk)
+## Authors:   Shaun Keegan (shaun.keegan@glasgow.ac.uk)
+##            Louise Matthews (louise.mattthews@glasgow.ac.uk)
 
 
 ## FORMAT: This file uses plain text descriptions of model parameters for user
@@ -17,48 +17,78 @@
 ##         exploring scenarios which are included at: 
 ##         http://github.com/shaunkeegan/AAT_AMR_main/scenarios
 
+library(codetools)
 
 AAT_AMR_dens_dep <- function(times, init, parms){
   
   # C - Cattle
-  CS  <- init[1] # Susceptible
-  CEs <- init[2] # Exposed (drug sensitive strain)
-  CEr <- init[3] # Exposed (drug resistant strain)
-  CIs <- init[4] # Infected (drug sensitive strain)
-  CIr <- init[5] # Infected (drug resistant strain)
-  CTs <- init[6] # Treated (drug sensitive strain)
-  CTr <- init[7] # Treated (drug resistant strain)
-  CR  <- init[8] # Recovered
+  CS  <- init["CS"] # Susceptible
+  CEs <- init["CEs"] # Exposed (drug sensitive strain)
+  CEr <- init["CEr"] # Exposed (drug resistant strain)
+  CIs <- init["CIs"] # Infected (drug sensitive strain)
+  CIr <- init["CIr"] # Infected (drug resistant strain)
+  CTs <- init["CTs"] # Treated (drug sensitive strain)
+  CTr <- init["CTr"] # Treated (drug resistant strain)
+  CR  <- init["CR"] # Recovered
   
   # P - Prophylactically treated cattle
-  PS  <- init[9]  # Susceptible
-  PEs <- init[10] # Exposed (drug sensitive strain)
-  PEr <- init[11] # Exposed (drug resistant strain)
-  PIs <- init[12] # Infected (drug sensitive strain)
-  PIr <- init[13] # Infected (drug resistant strain)
-  PTs <- init[14] # Treated (drug sensitive strain)
-  PTr <- init[15] # Treated (drug resistant strain)
-  PR  <- init[16] # Recovered
+  PS  <- init["PS"]  # Susceptible
+  PEs <- init["PEs"] # Exposed (drug sensitive strain)
+  PEr <- init["PEr"] # Exposed (drug resistant strain)
+  PIs <- init["PIs"] # Infected (drug sensitive strain)
+  PIr <- init["PIr"] # Infected (drug resistant strain)
+  PTs <- init["PTs"] # Treated (drug sensitive strain)
+  PTr <- init["PTr"] # Treated (drug resistant strain)
+  PR  <- init["PR"] # Recovered
   
   # W - Wildlife
-  WS  <- init[17] # Susceptible
-  WEs <- init[18] # Exposed (drug sensitive strain)
-  WEr <- init[19] # Exposed (drug resistant strain)
-  WIs <- init[20] # Infected (drug sensitive strain)
-  WIr <- init[21] # Infected (drug resistant strain)
-  WR  <- init[22] # Recovered
+  WS  <- init["WS"] # Susceptible
+  WEs <- init["WEs"] # Exposed (drug sensitive strain)
+  WEr <- init["WEr"] # Exposed (drug resistant strain)
+  WIs <- init["WIs"] # Infected (drug sensitive strain)
+  WIr <- init["WIr"] # Infected (drug resistant strain)
+  WR  <- init["WR"] # Recovered
   
   # V - Vectors
-  VS  <- init[23] # Susceptible
-  VEs <- init[24] # Exposed (drug sensitive strain) 
-  VEr <- init[25] # Exposed (drug resistant strain)
-  VIs <- init[26] # Infected (drug sensitive strain)
-  VIr <- init[27] # Infected (drug resistant strain) 
+  VS  <- init["VS"] # Susceptible
+  VEs <- init["VEs"] # Exposed (drug sensitive strain) 
+  VEr <- init["VEr"] # Exposed (drug resistant strain)
+  VIs <- init["VIs"] # Infected (drug sensitive strain)
+  VIr <- init["VIr"] # Infected (drug resistant strain) 
   
+  ## ----- Cattle
+  birth.c          <- parms["birth.c"]
+  biterate         <- parms["biterate"]
+  prob.infection   <- parms["prob.infection"]
+  infectiousness   <- parms["infectiousness"]
+  resusceptible    <- parms["resusceptible"]
+  death            <- parms["death"]
+  recovery         <- parms["recovery"]
+  treatment        <- parms["treatment"]
+  recovery.st      <- parms["recovery.st"]
+  emergence        <- parms["emergence"]
+  rec.adj          <- parms["rec.adj"]
+  prop.prophylaxis <- parms["prop.prophylaxis"]
+  fit.adj          <- parms["fit.adj"]
   
+  ## ----- Wildlife
+  birth.w            <- parms["birth.w"]
+  prob.infection.s.w <- parms["prob.infection.s.w"]
+  prob.infection.r.w <- parms["prob.infection.r.w"]
+  infectiousness.w   <- parms["infectiousness.w"]
+  resusceptible.w    <- parms["resusceptible.w"]
+  death.w            <- parms["death.w"]
+  recovery.w         <- parms["recovery.w"]
+  reversion          <- parms["reversion"]
   
+  ## ----- Vectors
+  K                <- parms["K"]
+  feeding.rate     <-  parms["feeding.rate"]
+  prob.infection.v <-  parms["prob.infection.v"]
+  death.v <- parms["death.v"]
+  birth.v <- parms["birth.v"]
+  infectiousness.v <- parms["infectiousness.v"]
   
-  with(as.list(parms),{
     
     # Population total ----
     N <- CS + CEs + CEr + CIs + CIr + CTs + CTr + CR +
@@ -193,5 +223,9 @@ AAT_AMR_dens_dep <- function(times, init, parms){
             dWS.dt, dWEs.dt, dWEr.dt, dWIs.dt, dWIr.dt, dWR.dt, 
             dVS.dt, dVEs.dt, dVEr.dt, dVIs.dt, dVIr.dt)
     list(dX)
-  })
+
+
 }
+
+
+findGlobals(fun = AAT_AMR_dens_dep, merge = FALSE)$variables
