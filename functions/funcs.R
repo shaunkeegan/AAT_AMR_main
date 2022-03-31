@@ -9,21 +9,21 @@ library(codetools)
 
 ## Parameters & Initial Conditions ----
 
-set1 <- function(output, birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW){
+set1 <- function(output, birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW, prop.prophylaxis){
   
   ## Cattle ----- 
   birth.c          <- 1 / 365
   biterate         <- 0.8 / 4
   prob.infection   <- 0.46
   infectiousness   <- 1 / 15
-  resusceptible    <- 1 / 100
+  resusceptible    <- 10
   death            <- birth.c
   recovery         <- 1 / 100
   treatment        <- prop_treat * (recovery + death) / (1 - prop_treat)
   recovery.st      <- recovery * 250 #LM: adjusted so that R0 drops below 1 when 99% treated to reflect Hargrove
   emergence        <- 0
   rec.adj          <- 1
-  prop.prophylaxis <- 0
+
   
   NC <- 50 # Total cattle
   CIr <- 0    # Infected (drug resistant strain)
