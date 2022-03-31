@@ -28,7 +28,7 @@ source("functions/r0_functions.R")
 source("functions/plot_functions.R")
 source("functions/funcs.R")
 
-loops <- TRUE
+loops <- FALSE
 
 
 if (loops == TRUE) {
@@ -40,6 +40,7 @@ if (loops == TRUE) {
   fit.adj_vec <- c(1.0)
   birth.adj.vec <- c(2)
   prop.insecticide.vec <- c(0.0, 0.05, 0.1, 0.15)
+  prop.prophylaxis <- 0
 } else {
   N_wl <- 200
   Trt_pop <- c(0.9)
@@ -48,6 +49,7 @@ if (loops == TRUE) {
   K.vec <- 10000
   prop.insecticide.vec <- 0
   birth.adj.vec <- 2
+  prop.prophylaxis <- 0
 }
 
 
@@ -86,8 +88,8 @@ for (birth.adj in birth.adj.vec) {
               cat(red("% Complete = ", round(progress,2), "Time elapsed =", round(time_taken_minutes,2), 
                       "mins", "Time left =", round(time_remaining,2), "\n"))}
             
-            params <- set1(output = "P", birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW)
-            inits <- set1(output = "I", birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW)
+            params <- set1(output = "P", birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW, prop.prophylaxis)
+            inits <- set1(output = "I", birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW, prop.prophylaxis)
 
             R0sen <- r0sen(params)  #R0 function shouldn't need "inits"
             R0s <- R0sen["R0s"]
@@ -156,47 +158,47 @@ tail(round(df2, 2))
 
 
 
-#par(mfrow = c(2, 1))
-#plot(out$CS ~ out$times, type = 'l', ylim = c(0, max(out[, 2]) + 5), 
-#     lwd = 3, col = 'blue', main = "Cattle (no Prophylaxis)", 
-#     xlab = "Time", ylab = "Number")
-#lines(out$CEs ~ out$times, lwd = 3, col = 'orange') # Exposed
-#lines(out$CEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
-#lines(out$CIs ~ out$times, lwd = 3, col = 'red') # Infected
-#lines(out$CIr ~ out$times, lwd = 3, col = 'darkred') # Infected
-#lines(out$CTs ~ out$times, lwd = 3, col = 'green') # Treated
-#lines(out$CTr ~ out$times, lwd = 3, col = 'darkgreen') # Treated
-#lines(out$CR ~ out$times, lwd = 3, col = 'grey') # Recovered
-#lines(( out$CEs + out$CEr + out$CIs + out$CIr + out$CTs + out$CTr + out$CR + out$CS) ~out$times,lty = 2)
-#
-## plot( out$PS ~ out$times, type = 'l', ylim = c(0, max(out[, 10]) + 5),col = 'blue',
-##   lwd = 3,main = "Cattle (with Prophylaxis)",xlab = "Time", ylab = "Number")
-## lines(out$PEs ~ out$times, lwd = 3, col = 'orange') # Exposed
-## lines(out$PEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
-## lines(out$PIs ~ out$times, lwd = 3, col = 'red') # Infected
-## lines(out$PIr ~ out$times, lwd = 3, col = 'darkred') # Infected
-## lines(out$PTs ~ out$times, lwd = 3, col = 'green') # Treated
-## lines(out$PTr ~ out$times, lwd = 3, col = 'darkgreen') # Treated
-## lines(out$PR  ~ out$times, lwd = 3, col = 'grey') # Recovered
-## lines((out$PEs + out$PEr + out$PIs + out$PIr + out$PTs + out$PTr + out$PR + out$PS) ~out$times, lty = 2)
-#
-#plot(out$WS ~ out$times,type = 'l', ylim = c(0, max(out[, 18]) + 5),col = 'blue',lwd = 3,
-#     main = "Wildlife", xlab = "Time", ylab = "Number")
-#lines(out$WEs ~ out$times, lwd = 3, col = 'orange') # Exposed
-#lines(out$WEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
-#lines(out$WIs ~ out$times, lwd = 3, col = 'red') # Infected
-#lines(out$WIr ~ out$times, lwd = 3, col = 'darkred') # Infected
-#lines(out$WR ~ out$times, lwd = 3, col = 'grey') # Recovered
-#lines((out$WEs + out$WEr + out$WIs + out$WIr + out$WR + out$WS) ~ out$times,lty = 2)
-#
-## plot(out$VS ~ out$times, type = 'l', ylim = c(0, max(out[, 24]) + 100), col = 'blue',
-##   lwd = 3, main = "Vector", xlab = "Time", ylab = "Number")
-## lines(out$VEs ~ out$times, lwd = 3, col = 'orange') # Exposed
-## lines(out$VEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
-## lines(out$VIs ~ out$times, lwd = 3, col = 'red') # Infected
-## lines(out$VIr ~ out$times, lwd = 3, col = 'darkred') # Infected
-## lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
-##         out$times, lty = 2)
+par(mfrow = c(2, 1))
+plot(out$CS ~ out$times, type = 'l', ylim = c(0, max(out[, 2]) + 5), 
+     lwd = 3, col = 'blue', main = "Cattle (no Prophylaxis)", 
+     xlab = "Time", ylab = "Number")
+lines(out$CEs ~ out$times, lwd = 3, col = 'orange') # Exposed
+lines(out$CEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
+lines(out$CIs ~ out$times, lwd = 3, col = 'red') # Infected
+lines(out$CIr ~ out$times, lwd = 3, col = 'darkred') # Infected
+lines(out$CTs ~ out$times, lwd = 3, col = 'green') # Treated
+lines(out$CTr ~ out$times, lwd = 3, col = 'darkgreen') # Treated
+lines(out$CR ~ out$times, lwd = 3, col = 'grey') # Recovered
+lines(( out$CEs + out$CEr + out$CIs + out$CIr + out$CTs + out$CTr + out$CR + out$CS) ~out$times,lty = 2)
+
+ plot( out$PS ~ out$times, type = 'l', ylim = c(0, max(out[, 10]) + 5),col = 'blue',
+   lwd = 3,main = "Cattle (with Prophylaxis)",xlab = "Time", ylab = "Number")
+ lines(out$PEs ~ out$times, lwd = 3, col = 'orange') # Exposed
+ lines(out$PEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
+ lines(out$PIs ~ out$times, lwd = 3, col = 'red') # Infected
+ lines(out$PIr ~ out$times, lwd = 3, col = 'darkred') # Infected
+ lines(out$PTs ~ out$times, lwd = 3, col = 'green') # Treated
+ lines(out$PTr ~ out$times, lwd = 3, col = 'darkgreen') # Treated
+ lines(out$PR  ~ out$times, lwd = 3, col = 'grey') # Recovered
+ lines((out$PEs + out$PEr + out$PIs + out$PIr + out$PTs + out$PTr + out$PR + out$PS) ~out$times, lty = 2)
+
+plot(out$WS ~ out$times,type = 'l', ylim = c(0, max(out[, 18]) + 5),col = 'blue',lwd = 3,
+     main = "Wildlife", xlab = "Time", ylab = "Number")
+lines(out$WEs ~ out$times, lwd = 3, col = 'orange') # Exposed
+lines(out$WEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
+lines(out$WIs ~ out$times, lwd = 3, col = 'red') # Infected
+lines(out$WIr ~ out$times, lwd = 3, col = 'darkred') # Infected
+lines(out$WR ~ out$times, lwd = 3, col = 'grey') # Recovered
+lines((out$WEs + out$WEr + out$WIs + out$WIr + out$WR + out$WS) ~ out$times,lty = 2)
+
+plot(out$VS ~ out$times, type = 'l', ylim = c(0, max(out[, 24]) + 100), col = 'blue',
+  lwd = 3, main = "Vector", xlab = "Time", ylab = "Number")
+lines(out$VEs ~ out$times, lwd = 3, col = 'orange') # Exposed
+lines(out$VEr ~ out$times, lwd = 3, col = 'darkorange') # Exposed
+lines(out$VIs ~ out$times, lwd = 3, col = 'red') # Infected
+lines(out$VIr ~ out$times, lwd = 3, col = 'darkred') # Infected
+lines((out$VEs + out$VEr + out$VIs + out$VIr + out$VS) ~
+        out$times, lty = 2)
 
 
 
