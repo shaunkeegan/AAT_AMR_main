@@ -148,7 +148,7 @@ AAT_AMR_dens_dep <- function(times, init, parms){
     dPEr.dt <- biterate * (prob.infection * fit.adj) * PS *VIr / N - infectiousness * 
       PEr - death * PEr 
     
-    dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery.st  * PIs -
+    dPIs.dt <- infectiousness * PEs - treatment * PIs - recovery  * PIs -
       death * PIs - emergence * PIs
     
     dPIr.dt <- infectiousness * PEr - treatment * PIr - recovery  * PIr -
