@@ -97,7 +97,7 @@ set1 <- function(output, birth.adj, fit.adj, K, prop_treat, prop.insecticide, NW
   params <- cbind(NC, NV, NW, birth.c, biterate, prob.infection, fit.adj, rec.adj, recovery.st, 
                   infectiousness, resusceptible, death, treatment, recovery, birth.v, 
                   death.v, feeding.rate, prob.infection.v, infectiousness.v, emergence, 
-                  reversion, K, birth.w, infectiousness.w, resusceptible.w, death.w, recovery.w)
+                  reversion, K, birth.w, infectiousness.w, resusceptible.w, death.w, recovery.w, equil_vector_pop)
   names <- colnames(params)
   params <- as.vector(params)
   names(params) <- names
