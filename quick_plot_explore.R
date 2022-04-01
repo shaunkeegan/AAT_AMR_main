@@ -8,7 +8,7 @@ source("functions/plot_functions.R")
 defaultW <- getOption("warn") 
 options(warn = -1) 
 
-load("test_Wed Mar 30 16:59:40 2022.Rda")
+load("test_Fri Apr 01 08:59:35 2022.Rda")
 test1 <- test %>% signif(4)
 
 
